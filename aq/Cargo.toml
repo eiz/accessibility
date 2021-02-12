@@ -11,4 +11,4 @@ description = "Accessibility query"
 [dependencies]
 core-foundation = "0.9"
 
-accessibility = { path = "../accessibility", version = "0.1.3" }
+accessibility = { path = "../accessibility", version = "0.1.4" }
