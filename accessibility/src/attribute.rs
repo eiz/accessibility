@@ -1,9 +1,13 @@
-use std::marker::PhantomData;
-
 use accessibility_sys::{
-    kAXChildrenAttribute, kAXDescriptionAttribute, kAXRoleAttribute, kAXWindowsAttribute,
+    kAXChildrenAttribute, kAXDescriptionAttribute, kAXLabelValueAttribute, kAXRoleAttribute,
+    kAXValueAttribute, kAXWindowsAttribute,
 };
-use core_foundation::{array::CFArray, base::TCFType, string::CFString};
+use core_foundation::{
+    array::CFArray,
+    base::{CFType, TCFType},
+    string::CFString,
+};
+use std::marker::PhantomData;
 
 use crate::AXUIElement;
 
@@ -33,9 +37,17 @@ macro_rules! attribute {
     };
 }
 
+impl AXAttribute<CFType> {
+    pub fn new(name: &CFString) -> Self {
+        AXAttribute(name.to_owned(), PhantomData)
+    }
+}
+
 impl AXAttribute<()> {
     attribute!(children, CFArray<AXUIElement>, kAXChildrenAttribute);
-    attribute!(windows, CFArray<AXUIElement>, kAXWindowsAttribute);
     attribute!(description, CFString, kAXDescriptionAttribute);
+    attribute!(label_value, CFString, kAXLabelValueAttribute);
     attribute!(role, CFString, kAXRoleAttribute);
+    attribute!(value, CFType, kAXValueAttribute);
+    attribute!(windows, CFArray<AXUIElement>, kAXWindowsAttribute);
 }

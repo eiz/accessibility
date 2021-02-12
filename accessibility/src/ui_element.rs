@@ -7,6 +7,7 @@ use core_foundation::{
     array::CFArray,
     base::{TCFType, TCFTypeRef},
     declare_TCFType, impl_CFTypeDescription, impl_TCFType,
+    string::CFString,
 };
 
 use crate::{util::ax_call, AXAttribute};
@@ -24,7 +25,7 @@ impl AXUIElement {
         unsafe { Self::wrap_under_create_rule(AXUIElementCreateApplication(pid)) }
     }
 
-    pub fn attribute_names(&self) -> Result<CFArray, AXError> {
+    pub fn attribute_names(&self) -> Result<CFArray<CFString>, AXError> {
         unsafe {
             Ok(CFArray::wrap_under_create_rule(ax_call(|x| {
                 AXUIElementCopyAttributeNames(self.0, x)
@@ -46,7 +47,7 @@ impl AXUIElement {
         }
     }
 
-    pub fn action_names(&self) -> Result<CFArray, AXError> {
+    pub fn action_names(&self) -> Result<CFArray<CFString>, AXError> {
         unsafe {
             Ok(CFArray::wrap_under_create_rule(ax_call(|x| {
                 AXUIElementCopyActionNames(self.0, x)
