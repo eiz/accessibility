@@ -1,6 +1,6 @@
 [package]
 name = "accessibility-sys"
-version = "0.1.0"
+version = "0.1.1"
 authors = ["Mack Straight <mack@discordapp.com>"]
 edition = "2018"
 license = "MIT / Apache-2.0"
@@ -9,3 +9,4 @@ repository = "https://github.com/eiz/accessibility"
 description = "Bindings for macOS Accessibility services"
 
 [dependencies]
+core-foundation-sys = "0.8"

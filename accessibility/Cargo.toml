@@ -9,4 +9,4 @@ repository = "https://github.com/eiz/accessibility"
 description = "Bindings for macOS Accessibility services"
 
 [dependencies]
-accessibility-sys = { path = "../accessibility-sys", version = "0.1" }
+accessibility-sys = { path = "../accessibility-sys", version = "0.1.1" }
