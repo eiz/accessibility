@@ -1,2 +1,2 @@
 [workspace]
-members = ["accessibility", "accessibility-sys"]
+members = ["accessibility", "accessibility-sys", "aq"]

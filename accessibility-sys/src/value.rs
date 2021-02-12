@@ -14,6 +14,7 @@ pub const kAXValueTypeIllegal: u32 = 0;
 pub enum __AXValue {}
 pub type AXValueRef = *mut __AXValue;
 
+#[link(name = "ApplicationServices", kind = "framework")]
 extern "C" {
     pub fn AXValueGetTypeID() -> CFTypeID;
     pub fn AXValueCreate(theType: AXValueType, valuePtr: *const c_void) -> AXValueRef;

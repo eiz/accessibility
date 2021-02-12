@@ -27,6 +27,7 @@ pub type CGCharCode = u16;
 // TODO(eiz): ditto, this is from mach headers...
 pub type pid_t = i32;
 
+#[link(name = "ApplicationServices", kind = "framework")]
 extern "C" {
     pub fn AXAPIEnabled() -> bool;
     pub fn AXIsProcessTrustedWithOptions(options: CFDictionaryRef) -> bool;
