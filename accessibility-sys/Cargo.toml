@@ -6,5 +6,6 @@ edition = "2018"
 license = "MIT / Apache-2.0"
 homepage = "https://github.com/eiz/accessibility"
 repository = "https://github.com/eiz/accessibility"
+description = "Bindings for macOS Accessibility services"
 
 [dependencies]
