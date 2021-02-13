@@ -1,6 +1,6 @@
 use accessibility_sys::{
-    kAXChildrenAttribute, kAXDescriptionAttribute, kAXLabelValueAttribute, kAXRoleAttribute,
-    kAXValueAttribute, kAXWindowsAttribute,
+    kAXChildrenAttribute, kAXDescriptionAttribute, kAXLabelValueAttribute,
+    kAXPlaceholderValueAttribute, kAXRoleAttribute, kAXValueAttribute, kAXWindowsAttribute,
 };
 use core_foundation::{
     array::CFArray,
@@ -47,6 +47,7 @@ impl AXAttribute<()> {
     attribute!(children, CFArray<AXUIElement>, kAXChildrenAttribute);
     attribute!(description, CFString, kAXDescriptionAttribute);
     attribute!(label_value, CFString, kAXLabelValueAttribute);
+    attribute!(placeholder_value, CFString, kAXPlaceholderValueAttribute);
     attribute!(role, CFString, kAXRoleAttribute);
     attribute!(value, CFType, kAXValueAttribute);
     attribute!(windows, CFArray<AXUIElement>, kAXWindowsAttribute);

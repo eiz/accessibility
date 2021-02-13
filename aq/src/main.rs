@@ -1,36 +1,10 @@
-use accessibility::{AXAttribute, AXUIElement};
+use accessibility::{AXAttribute, AXUIElement, TreeVisitor, TreeWalker, TreeWalkerFlow};
 use core_foundation::{array::CFArray, string::CFString};
-
-trait TreeVisitor {
-    fn enter_element(&mut self, element: &AXUIElement) -> bool;
-    fn exit_element(&mut self, element: &AXUIElement);
-}
-
-struct TreeWalker {
-    attr_children: AXAttribute<CFArray<AXUIElement>>,
-}
-
-impl TreeWalker {
-    pub fn new() -> Self {
-        Self {
-            attr_children: AXAttribute::children(),
-        }
-    }
-
-    pub fn walk(&self, root: &AXUIElement, visitor: &mut dyn TreeVisitor) {
-        if visitor.enter_element(root) {
-            if let Ok(children) = root.attribute(&self.attr_children) {
-                for child in children.into_iter() {
-                    self.walk(&*child, visitor);
-                }
-            }
-        }
-        visitor.exit_element(root);
-    }
-}
+use std::cell::Cell;
+use structopt::StructOpt;
 
 struct PrintyBoi {
-    level: usize,
+    level: Cell<usize>,
     indent: String,
     children: AXAttribute<CFArray<AXUIElement>>,
     role: AXAttribute<CFString>,
@@ -39,7 +13,7 @@ struct PrintyBoi {
 impl PrintyBoi {
     pub fn new_with_indentation(indent: usize) -> Self {
         Self {
-            level: 0,
+            level: Cell::new(0),
             indent: " ".repeat(indent),
             children: AXAttribute::children(),
             role: AXAttribute::role(),
@@ -48,15 +22,14 @@ impl PrintyBoi {
 }
 
 impl TreeVisitor for PrintyBoi {
-    fn enter_element(&mut self, element: &AXUIElement) -> bool {
-        let indent = self.indent.repeat(self.level);
-        println![
-            "{}- {}",
-            indent,
-            element
-                .attribute(&self.role)
-                .unwrap_or_else(|_| CFString::new("(error)")),
-        ];
+    fn enter_element(&self, element: &AXUIElement) -> TreeWalkerFlow {
+        let indent = self.indent.repeat(self.level.get());
+        let role = element
+            .attribute(&self.role)
+            .unwrap_or_else(|_| CFString::new(""));
+
+        self.level.replace(self.level.get() + 1);
+        println!["{}- {}", indent, role];
 
         if let Ok(names) = element.attribute_names() {
             for name in names.into_iter() {
@@ -69,22 +42,26 @@ impl TreeVisitor for PrintyBoi {
                 }
             }
         }
-        self.level += 1;
-        true
+
+        TreeWalkerFlow::Continue
     }
 
-    fn exit_element(&mut self, _element: &AXUIElement) {
-        self.level -= 1;
+    fn exit_element(&self, _element: &AXUIElement) {
+        self.level.replace(self.level.get() - 1);
     }
 }
 
-fn main() {
-    let app = AXUIElement::application(80898);
-    let windows = app.attribute(&AXAttribute::windows()).unwrap();
-    let walker = TreeWalker::new();
-    let mut printy = PrintyBoi::new_with_indentation(4);
+#[derive(StructOpt)]
+pub struct Opt {
+    pub pid: i32,
+}
 
-    for window in &windows {
-        walker.walk(&*window, &mut printy);
-    }
+fn main() -> Result<(), i32> {
+    let opt = Opt::from_args();
+    let app = AXUIElement::application(opt.pid);
+    let printy = PrintyBoi::new_with_indentation(4);
+    let walker = TreeWalker::new();
+
+    walker.walk(&app, &printy);
+    Ok(())
 }

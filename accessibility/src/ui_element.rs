@@ -1,7 +1,7 @@
 use accessibility_sys::{
     pid_t, AXError, AXUIElementCopyActionNames, AXUIElementCopyAttributeNames,
     AXUIElementCopyAttributeValue, AXUIElementCreateApplication, AXUIElementCreateSystemWide,
-    AXUIElementGetTypeID, AXUIElementRef,
+    AXUIElementGetTypeID, AXUIElementPerformAction, AXUIElementRef, AXUIElementSetAttributeValue,
 };
 use core_foundation::{
     array::CFArray,
@@ -47,11 +47,37 @@ impl AXUIElement {
         }
     }
 
+    pub fn set_attribute<T: TCFType>(
+        &self,
+        attribute: &AXAttribute<T>,
+        value: impl Into<T>,
+    ) -> Result<(), AXError> {
+        let value = value.into();
+
+        unsafe {
+            Ok(ax_call(|_: *mut ()| {
+                AXUIElementSetAttributeValue(
+                    self.0,
+                    attribute.as_CFString().as_concrete_TypeRef(),
+                    value.as_CFTypeRef(),
+                )
+            })?)
+        }
+    }
+
     pub fn action_names(&self) -> Result<CFArray<CFString>, AXError> {
         unsafe {
             Ok(CFArray::wrap_under_create_rule(ax_call(|x| {
                 AXUIElementCopyActionNames(self.0, x)
             })?))
+        }
+    }
+
+    pub fn perform_action(&self, name: &CFString) -> Result<(), AXError> {
+        unsafe {
+            Ok(ax_call(|_: *mut ()| {
+                AXUIElementPerformAction(self.0, name.as_concrete_TypeRef())
+            })?)
         }
     }
 }
