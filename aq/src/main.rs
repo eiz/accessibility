@@ -1,4 +1,6 @@
-use accessibility::{AXAttribute, AXUIElement, TreeVisitor, TreeWalker, TreeWalkerFlow};
+use accessibility::{
+    AXAttribute, AXUIElement, AXUIElementAttributes, TreeVisitor, TreeWalker, TreeWalkerFlow,
+};
 use core_foundation::{array::CFArray, string::CFString};
 use std::cell::Cell;
 use structopt::StructOpt;
@@ -7,7 +9,6 @@ struct PrintyBoi {
     level: Cell<usize>,
     indent: String,
     children: AXAttribute<CFArray<AXUIElement>>,
-    role: AXAttribute<CFString>,
 }
 
 impl PrintyBoi {
@@ -16,7 +17,6 @@ impl PrintyBoi {
             level: Cell::new(0),
             indent: " ".repeat(indent),
             children: AXAttribute::children(),
-            role: AXAttribute::role(),
         }
     }
 }
@@ -24,9 +24,7 @@ impl PrintyBoi {
 impl TreeVisitor for PrintyBoi {
     fn enter_element(&self, element: &AXUIElement) -> TreeWalkerFlow {
         let indent = self.indent.repeat(self.level.get());
-        let role = element
-            .attribute(&self.role)
-            .unwrap_or_else(|_| CFString::new(""));
+        let role = element.role().unwrap_or_else(|_| CFString::new(""));
 
         self.level.replace(self.level.get() + 1);
         println!["{}- {}", indent, role];

@@ -10,7 +10,10 @@ use core_foundation::{
     string::CFString,
 };
 
-use crate::{util::ax_call, AXAttribute};
+use crate::{
+    util::{ax_call, ax_call_void},
+    AXAttribute,
+};
 
 declare_TCFType!(AXUIElement, AXUIElementRef);
 impl_TCFType!(AXUIElement, AXUIElementRef, AXUIElementGetTypeID);
@@ -55,7 +58,7 @@ impl AXUIElement {
         let value = value.into();
 
         unsafe {
-            Ok(ax_call(|_: *mut ()| {
+            Ok(ax_call_void(|| {
                 AXUIElementSetAttributeValue(
                     self.0,
                     attribute.as_CFString().as_concrete_TypeRef(),
@@ -75,7 +78,7 @@ impl AXUIElement {
 
     pub fn perform_action(&self, name: &CFString) -> Result<(), AXError> {
         unsafe {
-            Ok(ax_call(|_: *mut ()| {
+            Ok(ax_call_void(|| {
                 AXUIElementPerformAction(self.0, name.as_concrete_TypeRef())
             })?)
         }
