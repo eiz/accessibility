@@ -5,6 +5,7 @@ mod util;
 use core_foundation::array::CFArray;
 use std::{
     cell::Cell,
+    cmp, thread,
     time::{Duration, Instant},
 };
 
@@ -59,19 +60,19 @@ impl TreeWalker {
     }
 }
 
-pub struct ElementFinder<F> {
+pub struct ElementFinder {
     implicit_wait: Option<Duration>,
-    predicate: F,
+    predicate: Box<dyn Fn(&AXUIElement) -> bool>,
     result: Cell<Option<AXUIElement>>,
 }
 
-impl<F> ElementFinder<F>
-where
-    F: Fn(&AXUIElement) -> bool,
-{
-    pub fn new(predicate: F, implicit_wait: Option<Duration>) -> Self {
+impl ElementFinder {
+    pub fn new<F>(predicate: F, implicit_wait: Option<Duration>) -> Self
+    where
+        F: 'static + Fn(&AXUIElement) -> bool,
+    {
         Self {
-            predicate,
+            predicate: Box::new(predicate),
             implicit_wait,
             result: Cell::new(None),
         }
@@ -95,14 +96,15 @@ where
             if Instant::now() >= deadline {
                 return None;
             }
+
+            if let Some(implicit_wait) = &self.implicit_wait {
+                thread::sleep(cmp::min(*implicit_wait, Duration::from_millis(250)));
+            }
         }
     }
 }
 
-impl<F> TreeVisitor for ElementFinder<F>
-where
-    F: Fn(&AXUIElement) -> bool,
-{
+impl TreeVisitor for ElementFinder {
     fn enter_element(&self, element: &AXUIElement) -> TreeWalkerFlow {
         if (self.predicate)(element) {
             self.result.set(Some(element.clone()));
