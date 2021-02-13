@@ -1,11 +1,17 @@
 use accessibility_sys::{
-    kAXChildrenAttribute, kAXDescriptionAttribute, kAXLabelValueAttribute,
-    kAXPlaceholderValueAttribute, kAXRoleAttribute, kAXValueAttribute, kAXWindowsAttribute,
-    AXError,
+    kAXAllowedValuesAttribute, kAXChildrenAttribute, kAXContentsAttribute, kAXDescriptionAttribute,
+    kAXElementBusyAttribute, kAXEnabledAttribute, kAXFocusedAttribute, kAXHelpAttribute,
+    kAXIdentifierAttribute, kAXLabelValueAttribute, kAXMainAttribute, kAXMaxValueAttribute,
+    kAXMinValueAttribute, kAXMinimizedAttribute, kAXParentAttribute, kAXPlaceholderValueAttribute,
+    kAXRoleAttribute, kAXRoleDescriptionAttribute, kAXSelectedChildrenAttribute,
+    kAXSubroleAttribute, kAXTitleAttribute, kAXTopLevelUIElementAttribute, kAXValueAttribute,
+    kAXValueDescriptionAttribute, kAXValueIncrementAttribute, kAXVisibleChildrenAttribute,
+    kAXWindowAttribute, kAXWindowsAttribute, AXError,
 };
 use core_foundation::{
     array::CFArray,
     base::{CFType, TCFType},
+    boolean::CFBoolean,
     string::CFString,
 };
 use std::marker::PhantomData;
@@ -78,11 +84,44 @@ impl AXAttribute<CFType> {
 }
 
 define_attributes![
+    (allowed_values, CFArray<CFType>, kAXAllowedValuesAttribute),
     (children, CFArray<AXUIElement>, kAXChildrenAttribute),
+    (contents, AXUIElement, kAXContentsAttribute),
     (description, CFString, kAXDescriptionAttribute),
+    (element_busy, CFBoolean, kAXElementBusyAttribute),
+    (enabled, CFBoolean, kAXEnabledAttribute),
+    (focused, CFBoolean, kAXFocusedAttribute),
+    (help, CFString, kAXHelpAttribute),
+    (identifier, CFString, kAXIdentifierAttribute),
     (label_value, CFString, kAXLabelValueAttribute),
+    (main, CFBoolean, kAXMainAttribute, set_main),
+    (max_value, CFType, kAXMaxValueAttribute),
+    (min_value, CFType, kAXMinValueAttribute),
+    (minimized, CFBoolean, kAXMinimizedAttribute),
+    (parent, AXUIElement, kAXParentAttribute),
     (placeholder_value, CFString, kAXPlaceholderValueAttribute),
     (role, CFString, kAXRoleAttribute),
+    (role_description, CFString, kAXRoleDescriptionAttribute),
+    (
+        selected_children,
+        CFArray<AXUIElement>,
+        kAXSelectedChildrenAttribute
+    ),
+    (subrole, CFString, kAXSubroleAttribute),
+    (title, CFString, kAXTitleAttribute),
+    (
+        top_level_ui_element,
+        AXUIElement,
+        kAXTopLevelUIElementAttribute
+    ),
     (value, CFType, kAXValueAttribute, set_value),
+    (value_description, CFString, kAXValueDescriptionAttribute),
+    (value_increment, CFType, kAXValueIncrementAttribute),
+    (
+        visible_children,
+        CFArray<AXUIElement>,
+        kAXVisibleChildrenAttribute
+    ),
+    (window, AXUIElement, kAXWindowAttribute),
     (windows, CFArray<AXUIElement>, kAXWindowsAttribute),
 ];
