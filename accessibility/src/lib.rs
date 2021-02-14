@@ -1,16 +1,28 @@
+pub mod action;
 pub mod attribute;
 pub mod ui_element;
 mod util;
 
-use core_foundation::array::CFArray;
+use accessibility_sys::AXError;
+use core_foundation::{array::CFArray, base::TCFType, string::CFString};
 use std::{
-    cell::Cell,
+    cell::RefCell,
     cmp, thread,
     time::{Duration, Instant},
 };
+use thiserror::Error as TError;
 
+pub use action::*;
 pub use attribute::*;
 pub use ui_element::*;
+
+#[derive(Debug, TError)]
+pub enum Error {
+    #[error("element not found")]
+    NotFound,
+    #[error("accessibility error {0:?}")]
+    Ax(AXError),
+}
 
 pub trait TreeVisitor {
     fn enter_element(&self, element: &AXUIElement) -> TreeWalkerFlow;
@@ -61,24 +73,30 @@ impl TreeWalker {
 }
 
 pub struct ElementFinder {
+    root: AXUIElement,
     implicit_wait: Option<Duration>,
     predicate: Box<dyn Fn(&AXUIElement) -> bool>,
-    result: Cell<Option<AXUIElement>>,
+    cached: RefCell<Option<AXUIElement>>,
 }
 
 impl ElementFinder {
-    pub fn new<F>(predicate: F, implicit_wait: Option<Duration>) -> Self
+    pub fn new<F>(root: &AXUIElement, predicate: F, implicit_wait: Option<Duration>) -> Self
     where
         F: 'static + Fn(&AXUIElement) -> bool,
     {
         Self {
+            root: root.clone(),
             predicate: Box::new(predicate),
             implicit_wait,
-            result: Cell::new(None),
+            cached: RefCell::new(None),
         }
     }
 
-    pub fn find(&self, root: &AXUIElement) -> Option<AXUIElement> {
+    pub fn find(&self) -> Result<AXUIElement, Error> {
+        if let Some(result) = &*self.cached.borrow() {
+            return Ok(result.clone());
+        }
+
         let mut deadline = Instant::now();
         let walker = TreeWalker::new();
 
@@ -87,14 +105,14 @@ impl ElementFinder {
         }
 
         loop {
-            walker.walk(root, self);
+            walker.walk(&self.root, self);
 
-            if let Some(result) = self.result.take() {
-                return Some(result);
+            if let Some(result) = &*self.cached.borrow() {
+                return Ok(result.clone());
             }
 
             if Instant::now() >= deadline {
-                return None;
+                return Err(Error::NotFound);
             }
 
             if let Some(implicit_wait) = &self.implicit_wait {
@@ -102,12 +120,32 @@ impl ElementFinder {
             }
         }
     }
+
+    pub fn reset(&self) {
+        self.cached.replace(None);
+    }
+
+    pub fn attribute<T: TCFType>(&self, attribute: &AXAttribute<T>) -> Result<T, Error> {
+        self.find()?.attribute(attribute)
+    }
+
+    pub fn set_attribute<T: TCFType>(
+        &self,
+        attribute: &AXAttribute<T>,
+        value: impl Into<T>,
+    ) -> Result<(), Error> {
+        self.find()?.set_attribute(attribute, value)
+    }
+
+    pub fn perform_action(&self, name: &CFString) -> Result<(), Error> {
+        self.find()?.perform_action(name)
+    }
 }
 
 impl TreeVisitor for ElementFinder {
     fn enter_element(&self, element: &AXUIElement) -> TreeWalkerFlow {
         if (self.predicate)(element) {
-            self.result.set(Some(element.clone()));
+            self.cached.replace(Some(element.clone()));
             return TreeWalkerFlow::Exit;
         }
 

@@ -6,7 +6,7 @@ use accessibility_sys::{
     kAXRoleAttribute, kAXRoleDescriptionAttribute, kAXSelectedChildrenAttribute,
     kAXSubroleAttribute, kAXTitleAttribute, kAXTopLevelUIElementAttribute, kAXValueAttribute,
     kAXValueDescriptionAttribute, kAXValueIncrementAttribute, kAXVisibleChildrenAttribute,
-    kAXWindowAttribute, kAXWindowsAttribute, AXError,
+    kAXWindowAttribute, kAXWindowsAttribute,
 };
 use core_foundation::{
     array::CFArray,
@@ -16,7 +16,7 @@ use core_foundation::{
 };
 use std::marker::PhantomData;
 
-use crate::AXUIElement;
+use crate::{AXUIElement, ElementFinder, Error};
 
 pub trait TAXAttribute {
     type Value: TCFType;
@@ -39,19 +39,19 @@ impl<T> AXAttribute<T> {
 macro_rules! accessor {
     (@decl $name:ident, $typ:ty, $const:ident, $setter:ident) => {
         accessor!(@decl $name, $typ, $const);
-        fn $setter(&self, value: impl Into<$typ>) -> Result<(), AXError>;
+        fn $setter(&self, value: impl Into<$typ>) -> Result<(), Error>;
     };
     (@decl $name:ident, $typ:ty, $const:ident) => {
-        fn $name(&self) -> Result<$typ, AXError>;
+        fn $name(&self) -> Result<$typ, Error>;
     };
     (@impl $name:ident, $typ:ty, $const:ident, $setter:ident) => {
         accessor!(@impl $name, $typ, $const);
-        fn $setter(&self, value: impl Into<$typ>) -> Result<(), AXError> {
+        fn $setter(&self, value: impl Into<$typ>) -> Result<(), Error> {
             self.set_attribute(&AXAttribute::$name(), value)
         }
     };
     (@impl $name:ident, $typ:ty, $const:ident) => {
-        fn $name(&self) -> Result<$typ, AXError> {
+        fn $name(&self) -> Result<$typ, Error> {
             self.attribute(&AXAttribute::$name())
         }
     };
@@ -72,6 +72,10 @@ macro_rules! define_attributes {
         }
 
         impl AXUIElementAttributes for AXUIElement {
+            $(accessor!(@impl $name, $typ, $const $(, $setter)? );)*
+        }
+
+        impl AXUIElementAttributes for ElementFinder {
             $(accessor!(@impl $name, $typ, $const $(, $setter)? );)*
         }
     }

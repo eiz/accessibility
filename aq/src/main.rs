@@ -27,7 +27,12 @@ impl TreeVisitor for PrintyBoi {
         let role = element.role().unwrap_or_else(|_| CFString::new(""));
 
         self.level.replace(self.level.get() + 1);
-        println!["{}- {}", indent, role];
+        println![
+            "{}- {} ({} children)",
+            indent,
+            role,
+            element.children().unwrap().len()
+        ];
 
         if let Ok(names) = element.attribute_names() {
             for name in names.into_iter() {

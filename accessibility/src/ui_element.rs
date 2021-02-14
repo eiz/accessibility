@@ -1,5 +1,5 @@
 use accessibility_sys::{
-    pid_t, AXError, AXUIElementCopyActionNames, AXUIElementCopyAttributeNames,
+    pid_t, AXUIElementCopyActionNames, AXUIElementCopyAttributeNames,
     AXUIElementCopyAttributeValue, AXUIElementCreateApplication, AXUIElementCreateSystemWide,
     AXUIElementGetTypeID, AXUIElementPerformAction, AXUIElementRef, AXUIElementSetAttributeValue,
 };
@@ -12,7 +12,7 @@ use core_foundation::{
 
 use crate::{
     util::{ax_call, ax_call_void},
-    AXAttribute,
+    AXAttribute, Error,
 };
 
 declare_TCFType!(AXUIElement, AXUIElementRef);
@@ -28,25 +28,26 @@ impl AXUIElement {
         unsafe { Self::wrap_under_create_rule(AXUIElementCreateApplication(pid)) }
     }
 
-    pub fn attribute_names(&self) -> Result<CFArray<CFString>, AXError> {
+    pub fn attribute_names(&self) -> Result<CFArray<CFString>, Error> {
         unsafe {
-            Ok(CFArray::wrap_under_create_rule(ax_call(|x| {
-                AXUIElementCopyAttributeNames(self.0, x)
-            })?))
+            Ok(CFArray::wrap_under_create_rule(
+                ax_call(|x| AXUIElementCopyAttributeNames(self.0, x)).map_err(Error::Ax)?,
+            ))
         }
     }
 
-    pub fn attribute<T: TCFType>(&self, attribute: &AXAttribute<T>) -> Result<T, AXError> {
+    pub fn attribute<T: TCFType>(&self, attribute: &AXAttribute<T>) -> Result<T, Error> {
         unsafe {
-            Ok(T::wrap_under_create_rule(T::Ref::from_void_ptr(ax_call(
-                |x| {
+            Ok(T::wrap_under_create_rule(T::Ref::from_void_ptr(
+                ax_call(|x| {
                     AXUIElementCopyAttributeValue(
                         self.0,
                         attribute.as_CFString().as_concrete_TypeRef(),
                         x,
                     )
-                },
-            )?)))
+                })
+                .map_err(Error::Ax)?,
+            )))
         }
     }
 
@@ -54,7 +55,7 @@ impl AXUIElement {
         &self,
         attribute: &AXAttribute<T>,
         value: impl Into<T>,
-    ) -> Result<(), AXError> {
+    ) -> Result<(), Error> {
         let value = value.into();
 
         unsafe {
@@ -64,23 +65,25 @@ impl AXUIElement {
                     attribute.as_CFString().as_concrete_TypeRef(),
                     value.as_CFTypeRef(),
                 )
-            })?)
+            })
+            .map_err(Error::Ax)?)
         }
     }
 
-    pub fn action_names(&self) -> Result<CFArray<CFString>, AXError> {
+    pub fn action_names(&self) -> Result<CFArray<CFString>, Error> {
         unsafe {
-            Ok(CFArray::wrap_under_create_rule(ax_call(|x| {
-                AXUIElementCopyActionNames(self.0, x)
-            })?))
+            Ok(CFArray::wrap_under_create_rule(
+                ax_call(|x| AXUIElementCopyActionNames(self.0, x)).map_err(Error::Ax)?,
+            ))
         }
     }
 
-    pub fn perform_action(&self, name: &CFString) -> Result<(), AXError> {
+    pub fn perform_action(&self, name: &CFString) -> Result<(), Error> {
         unsafe {
-            Ok(ax_call_void(|| {
-                AXUIElementPerformAction(self.0, name.as_concrete_TypeRef())
-            })?)
+            Ok(
+                ax_call_void(|| AXUIElementPerformAction(self.0, name.as_concrete_TypeRef()))
+                    .map_err(Error::Ax)?,
+            )
         }
     }
 }

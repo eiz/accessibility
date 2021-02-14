@@ -10,6 +10,7 @@ description = "Bindings for macOS Accessibility services"
 
 [dependencies]
 core-foundation = "0.9"
+thiserror = "1"
 
 accessibility-sys = { path = "../accessibility-sys", version = "0.1.3" }
 
