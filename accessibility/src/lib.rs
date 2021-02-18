@@ -7,7 +7,7 @@ use accessibility_sys::AXError;
 use core_foundation::{array::CFArray, base::TCFType, string::CFString};
 use std::{
     cell::RefCell,
-    cmp, thread,
+    thread,
     time::{Duration, Instant},
 };
 use thiserror::Error as TError;
@@ -105,18 +105,18 @@ impl ElementFinder {
         }
 
         loop {
-            walker.walk(&self.root, self);
-
             if let Some(result) = &*self.cached.borrow() {
                 return Ok(result.clone());
             }
 
-            if Instant::now() >= deadline {
-                return Err(Error::NotFound);
-            }
+            walker.walk(&self.root, self);
+            let now = Instant::now();
 
-            if let Some(implicit_wait) = &self.implicit_wait {
-                thread::sleep(cmp::min(*implicit_wait, Duration::from_millis(250)));
+            if now >= deadline {
+                return Err(Error::NotFound);
+            } else {
+                let time_left = deadline.saturating_duration_since(now);
+                thread::sleep(std::cmp::min(time_left, Duration::from_millis(250)));
             }
         }
     }
