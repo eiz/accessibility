@@ -6,7 +6,7 @@ mod util;
 use accessibility_sys::AXError;
 use core_foundation::{array::CFArray, base::TCFType, string::CFString};
 use std::{
-    cell::RefCell,
+    cell::{Cell, RefCell},
     thread,
     time::{Duration, Instant},
 };
@@ -76,6 +76,7 @@ pub struct ElementFinder {
     root: AXUIElement,
     implicit_wait: Option<Duration>,
     predicate: Box<dyn Fn(&AXUIElement) -> bool>,
+    depth: Cell<usize>,
     cached: RefCell<Option<AXUIElement>>,
 }
 
@@ -88,6 +89,7 @@ impl ElementFinder {
             root: root.clone(),
             predicate: Box::new(predicate),
             implicit_wait,
+            depth: Cell::new(0),
             cached: RefCell::new(None),
         }
     }
@@ -142,6 +144,8 @@ impl ElementFinder {
     }
 }
 
+const MAX_DEPTH: usize = 100;
+
 impl TreeVisitor for ElementFinder {
     fn enter_element(&self, element: &AXUIElement) -> TreeWalkerFlow {
         if (self.predicate)(element) {
@@ -149,8 +153,15 @@ impl TreeVisitor for ElementFinder {
             return TreeWalkerFlow::Exit;
         }
 
-        TreeWalkerFlow::Continue
+        self.depth.set(self.depth.get() + 1);
+        if self.depth.get() > MAX_DEPTH {
+            TreeWalkerFlow::SkipSubtree
+        } else {
+            TreeWalkerFlow::Continue
+        }
     }
 
-    fn exit_element(&self, _element: &AXUIElement) {}
+    fn exit_element(&self, _element: &AXUIElement) {
+        self.depth.set(self.depth.get() - 1)
+    }
 }
