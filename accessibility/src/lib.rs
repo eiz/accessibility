@@ -148,12 +148,13 @@ const MAX_DEPTH: usize = 100;
 
 impl TreeVisitor for ElementFinder {
     fn enter_element(&self, element: &AXUIElement) -> TreeWalkerFlow {
+        self.depth.set(self.depth.get() + 1);
+
         if (self.predicate)(element) {
             self.cached.replace(Some(element.clone()));
             return TreeWalkerFlow::Exit;
         }
 
-        self.depth.set(self.depth.get() + 1);
         if self.depth.get() > MAX_DEPTH {
             TreeWalkerFlow::SkipSubtree
         } else {
