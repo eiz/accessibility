@@ -1,5 +1,6 @@
 pub mod action;
 pub mod attribute;
+pub mod observer;
 pub mod ui_element;
 mod util;
 
@@ -14,6 +15,7 @@ use thiserror::Error as TError;
 
 pub use action::*;
 pub use attribute::*;
+pub use observer::*;
 pub use ui_element::*;
 
 #[derive(Debug, TError)]
