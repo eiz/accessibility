@@ -52,16 +52,12 @@ impl AXObserver {
             // Create CFStringRef from notification string
             let notification_cfstr = CFString::from_str(notification.as_str()).unwrap();
 
-            // "Wrap" self into a context pointer. This allows the callback function to access self features.
-            // let ctx_ptr: *mut c_void = &mut *self as *mut _ as *mut c_void;
-            let ctx_ptr: *mut c_void = &mut ctx as *mut _ as *mut c_void;
-
             Ok(ax_call_void(|| {
                 AXObserverAddNotification(
                     self.0,
                     ui_element.as_CFTypeRef() as AXUIElementRef,
                     notification_cfstr.as_concrete_TypeRef(),
-                    ctx_ptr,
+                    &mut ctx as *mut _ as *mut c_void,
                 )
             })
             .map_err(Error::Ax)?)
