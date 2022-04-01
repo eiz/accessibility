@@ -6,7 +6,8 @@ use std::{
 use accessibility_sys::{
     pid_t, AXUIElementCopyActionNames, AXUIElementCopyAttributeNames,
     AXUIElementCopyAttributeValue, AXUIElementCreateApplication, AXUIElementCreateSystemWide,
-    AXUIElementGetTypeID, AXUIElementPerformAction, AXUIElementRef, AXUIElementSetAttributeValue,
+    AXUIElementGetPid, AXUIElementGetTypeID, AXUIElementPerformAction, AXUIElementRef,
+    AXUIElementSetAttributeValue,
 };
 use cocoa::{
     base::{id, nil},
@@ -81,6 +82,10 @@ impl AXUIElement {
                 }
             }
         }
+    }
+
+    pub fn pid(&self) -> Result<pid_t, Error> {
+        unsafe { Ok(ax_call(|x| AXUIElementGetPid(self.0, x)).map_err(Error::Ax)?) }
     }
 
     pub fn attribute_names(&self) -> Result<CFArray<CFString>, Error> {
