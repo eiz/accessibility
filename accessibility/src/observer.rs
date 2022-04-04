@@ -44,13 +44,13 @@ impl AXObserver {
 
     pub fn add_notification<T>(
         &mut self,
-        notification: String,
+        notification: &str,
         ui_element: &AXUIElement,
         mut ctx: T,
     ) -> Result<(), Error> {
         unsafe {
             // Create CFStringRef from notification string
-            let notification_cfstr = CFString::from_str(notification.as_str()).unwrap();
+            let notification_cfstr = CFString::from_str(notification).unwrap();
 
             Ok(ax_call_void(|| {
                 AXObserverAddNotification(
@@ -66,12 +66,12 @@ impl AXObserver {
 
     pub fn remove_notification(
         &mut self,
-        notification: String,
+        notification: &str,
         ui_element: &AXUIElement,
     ) -> Result<(), Error> {
         unsafe {
             // Create CFStringRef from notification string
-            let notification_cfstr = CFString::from_str(notification.as_str()).unwrap();
+            let notification_cfstr = CFString::from_str(notification).unwrap();
 
             Ok(ax_call_void(|| {
                 AXObserverRemoveNotification(
