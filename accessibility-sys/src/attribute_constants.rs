@@ -22,6 +22,7 @@ pub const kAXWindowAttribute: &str = "AXWindow";
 pub const kAXTopLevelUIElementAttribute: &str = "AXTopLevelUIElement";
 pub const kAXPositionAttribute: &str = "AXPosition";
 pub const kAXSizeAttribute: &str = "AXSize";
+pub const kAXFrameAttribute: &str = "AXFrame";
 pub const kAXOrientationAttribute: &str = "AXOrientation";
 pub const kAXDescriptionAttribute: &str = "AXDescription";
 pub const kAXDescription: &str = "AXDescription"; // old name
