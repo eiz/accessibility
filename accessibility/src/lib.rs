@@ -3,6 +3,7 @@ pub mod attribute;
 pub mod observer;
 pub mod ui_element;
 mod util;
+pub mod value;
 
 use accessibility_sys::AXError;
 use core_foundation::{array::CFArray, base::TCFType, string::CFString};
@@ -17,6 +18,7 @@ pub use action::*;
 pub use attribute::*;
 pub use observer::*;
 pub use ui_element::*;
+pub use value::*;
 
 #[derive(Debug, TError)]
 pub enum Error {
