@@ -1,9 +1,10 @@
 use accessibility_sys::{
     kAXAllowedValuesAttribute, kAXChildrenAttribute, kAXContentsAttribute, kAXDescriptionAttribute,
-    kAXElementBusyAttribute, kAXEnabledAttribute, kAXFocusedAttribute, kAXHelpAttribute,
-    kAXIdentifierAttribute, kAXLabelValueAttribute, kAXMainAttribute, kAXMaxValueAttribute,
-    kAXMinValueAttribute, kAXMinimizedAttribute, kAXParentAttribute, kAXPlaceholderValueAttribute,
-    kAXRoleAttribute, kAXRoleDescriptionAttribute, kAXSelectedChildrenAttribute,
+    kAXElementBusyAttribute, kAXEnabledAttribute, kAXFocusedApplicationAttribute,
+    kAXFocusedAttribute, kAXFocusedUIElementAttribute, kAXHelpAttribute, kAXIdentifierAttribute,
+    kAXLabelValueAttribute, kAXMainAttribute, kAXMaxValueAttribute, kAXMinValueAttribute,
+    kAXMinimizedAttribute, kAXParentAttribute, kAXPlaceholderValueAttribute, kAXPositionAttribute,
+    kAXRoleAttribute, kAXRoleDescriptionAttribute, kAXSelectedChildrenAttribute, kAXSizeAttribute,
     kAXSubroleAttribute, kAXTitleAttribute, kAXTopLevelUIElementAttribute, kAXValueAttribute,
     kAXValueDescriptionAttribute, kAXValueIncrementAttribute, kAXVisibleChildrenAttribute,
     kAXWindowAttribute, kAXWindowsAttribute,
@@ -16,7 +17,7 @@ use core_foundation::{
 };
 use std::marker::PhantomData;
 
-use crate::{AXUIElement, ElementFinder, Error};
+use crate::{AXUIElement, AXValue, ElementFinder, Error};
 
 pub trait TAXAttribute {
     type Value: TCFType;
@@ -94,7 +95,14 @@ define_attributes![
     (description, CFString, kAXDescriptionAttribute),
     (element_busy, CFBoolean, kAXElementBusyAttribute),
     (enabled, CFBoolean, kAXEnabledAttribute),
+    (
+        focused_application,
+        AXUIElement,
+        kAXFocusedApplicationAttribute
+    ),
+    (focused_uielement, AXUIElement, kAXFocusedUIElementAttribute),
     (focused, CFBoolean, kAXFocusedAttribute),
+    (frame, AXValue, kAXFocusedAttribute),
     (help, CFString, kAXHelpAttribute),
     (identifier, CFString, kAXIdentifierAttribute),
     (label_value, CFString, kAXLabelValueAttribute),
@@ -104,6 +112,7 @@ define_attributes![
     (minimized, CFBoolean, kAXMinimizedAttribute),
     (parent, AXUIElement, kAXParentAttribute),
     (placeholder_value, CFString, kAXPlaceholderValueAttribute),
+    (position, AXValue, kAXPositionAttribute),
     (role, CFString, kAXRoleAttribute),
     (role_description, CFString, kAXRoleDescriptionAttribute),
     (
@@ -112,6 +121,7 @@ define_attributes![
         kAXSelectedChildrenAttribute
     ),
     (subrole, CFString, kAXSubroleAttribute),
+    (size, AXValue, kAXSizeAttribute),
     (title, CFString, kAXTitleAttribute),
     (
         top_level_ui_element,
