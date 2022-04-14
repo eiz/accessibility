@@ -42,6 +42,30 @@ impl AXObserver {
         }
     }
 
+    pub fn new_from_bundle(bundle_id: &str, callback: AXObserverCallback) -> Result<Self, Error> {
+        let bundle_ui_element = AXUIElement::application_with_bundle(bundle_id)?;
+        let bundle_pid = bundle_ui_element.pid()?;
+        unsafe {
+            Ok(TCFType::wrap_under_create_rule(
+                ax_call(|x| AXObserverCreate(bundle_pid, callback, x)).map_err(Error::Ax)?,
+            ))
+        }
+    }
+
+    pub fn new_from_bundle_with_info(
+        bundle_id: &str,
+        callback: AXObserverCallbackWithInfo,
+    ) -> Result<Self, Error> {
+        let bundle_ui_element = AXUIElement::application_with_bundle(bundle_id)?;
+        let bundle_pid = bundle_ui_element.pid()?;
+        unsafe {
+            Ok(TCFType::wrap_under_create_rule(
+                ax_call(|x| AXObserverCreateWithInfoCallback(bundle_pid, callback, x))
+                    .map_err(Error::Ax)?,
+            ))
+        }
+    }
+
     pub fn add_notification<T>(
         &mut self,
         notification: &str,
