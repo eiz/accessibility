@@ -5,8 +5,9 @@ use std::{
 
 use accessibility_sys::{
     pid_t, AXUIElementCopyActionNames, AXUIElementCopyAttributeNames,
-    AXUIElementCopyAttributeValue, AXUIElementCreateApplication, AXUIElementCreateSystemWide,
-    AXUIElementGetPid, AXUIElementGetTypeID, AXUIElementPerformAction, AXUIElementRef,
+    AXUIElementCopyAttributeValue, AXUIElementCopyParameterizedAttributeNames,
+    AXUIElementCreateApplication, AXUIElementCreateSystemWide, AXUIElementGetPid,
+    AXUIElementGetTypeID, AXUIElementIsAttributeSettable, AXUIElementPerformAction, AXUIElementRef,
     AXUIElementSetAttributeValue,
 };
 use cocoa::{
@@ -96,6 +97,15 @@ impl AXUIElement {
         }
     }
 
+    pub fn parameterized_attribute_names(&self) -> Result<CFArray<CFString>, Error> {
+        unsafe {
+            Ok(CFArray::wrap_under_create_rule(
+                ax_call(|x| AXUIElementCopyParameterizedAttributeNames(self.0, x))
+                    .map_err(Error::Ax)?,
+            ))
+        }
+    }
+
     pub fn attribute<T: TCFType>(&self, attribute: &AXAttribute<T>) -> Result<T, Error> {
         unsafe {
             Ok(T::wrap_under_create_rule(T::Ref::from_void_ptr(
@@ -124,6 +134,22 @@ impl AXUIElement {
                     self.0,
                     attribute.as_CFString().as_concrete_TypeRef(),
                     value.as_CFTypeRef(),
+                )
+            })
+            .map_err(Error::Ax)?)
+        }
+    }
+
+    pub fn is_attribute_settable<T: TCFType>(
+        &self,
+        attribute: &AXAttribute<T>,
+    ) -> Result<bool, Error> {
+        unsafe {
+            Ok(ax_call(|x| {
+                AXUIElementIsAttributeSettable(
+                    self.0,
+                    attribute.as_CFString().as_concrete_TypeRef(),
+                    x,
                 )
             })
             .map_err(Error::Ax)?)
