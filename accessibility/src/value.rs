@@ -28,9 +28,9 @@ impl ValidAXValueType for CFRange {}
 
 impl AXValue {
     #[allow(non_snake_case)]
-    pub fn from_CGSize(mut size: &CGSize) -> Result<Self, Error> {
+    pub fn from_CGSize(mut size: CGSize) -> Result<Self, Error> {
         unsafe {
-            Ok(TCFType::wrap_under_create_rule(AXValueCreate(
+            Ok(Self::wrap_under_create_rule(AXValueCreate(
                 kAXValueTypeCGSize,
                 &mut size as *mut _ as *mut c_void,
             )))
@@ -38,9 +38,9 @@ impl AXValue {
     }
 
     #[allow(non_snake_case)]
-    pub fn from_CGPoint(mut point: &CGPoint) -> Result<Self, Error> {
+    pub fn from_CGPoint(mut point: CGPoint) -> Result<Self, Error> {
         unsafe {
-            Ok(TCFType::wrap_under_create_rule(AXValueCreate(
+            Ok(Self::wrap_under_create_rule(AXValueCreate(
                 kAXValueTypeCGPoint,
                 &mut point as *mut _ as *mut c_void,
             )))
@@ -48,9 +48,9 @@ impl AXValue {
     }
 
     #[allow(non_snake_case)]
-    pub fn from_CGRect(mut rect: &CGRect) -> Result<Self, Error> {
+    pub fn from_CGRect(mut rect: CGRect) -> Result<Self, Error> {
         unsafe {
-            Ok(TCFType::wrap_under_create_rule(AXValueCreate(
+            Ok(Self::wrap_under_create_rule(AXValueCreate(
                 kAXValueTypeCGRect,
                 &mut rect as *mut _ as *mut c_void,
             )))
@@ -58,9 +58,9 @@ impl AXValue {
     }
 
     #[allow(non_snake_case)]
-    pub fn from_CFRange(mut range: &CFRange) -> Result<Self, Error> {
+    pub fn from_CFRange(mut range: CFRange) -> Result<Self, Error> {
         unsafe {
-            Ok(TCFType::wrap_under_create_rule(AXValueCreate(
+            Ok(Self::wrap_under_create_rule(AXValueCreate(
                 kAXValueTypeCFRange,
                 &mut range as *mut _ as *mut c_void,
             )))
@@ -97,7 +97,7 @@ impl AXValue {
                     }
                 }
                 kAXValueTypeCFRange => {
-                    if std::any::type_name::<T>() != "core_graphics_types::geometry::CFRange" {
+                    if std::any::type_name::<T>() != "core_foundation::base::CFRange" {
                         return Err(Error::Ax(helper_u32_to_i32(kAXValueTypeAXError)));
                     }
                 }
