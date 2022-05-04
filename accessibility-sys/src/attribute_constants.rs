@@ -160,3 +160,7 @@ pub const kAXLayoutPointForScreenPointParameterizedAttribute: &str = "AXLayoutPo
 pub const kAXLayoutSizeForScreenSizeParameterizedAttribute: &str = "AXLayoutSizeForScreenSize";
 pub const kAXScreenPointForLayoutPointParameterizedAttribute: &str = "AXScreenPointForLayoutPoint";
 pub const kAXScreenSizeForLayoutSizeParameterizedAttribute: &str = "AXScreenSizeForLayoutSize";
+pub const kAXAXReplaceRangeWithTextParameterizedAttribute: &str = "AXReplaceRangeWithText";
+pub const kAXAXNextLineRangeForIndexParameterizedAttribute: &str = "AXNextLineRangeForIndex";
+pub const kAXAXPreviousLineRangeForIndexParameterizedAttribute: &str =
+    "AXPreviousLineRangeForIndex";

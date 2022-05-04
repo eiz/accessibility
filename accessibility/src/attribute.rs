@@ -1,16 +1,18 @@
 use accessibility_sys::{
-    kAXAllowedValuesAttribute, kAXBoundsForRangeParameterizedAttribute, kAXChildrenAttribute,
-    kAXContentsAttribute, kAXDescriptionAttribute, kAXElementBusyAttribute, kAXEnabledAttribute,
+    kAXAXNextLineRangeForIndexParameterizedAttribute,
+    kAXAXPreviousLineRangeForIndexParameterizedAttribute, kAXAllowedValuesAttribute,
+    kAXBoundsForRangeParameterizedAttribute, kAXChildrenAttribute, kAXContentsAttribute,
+    kAXDescriptionAttribute, kAXElementBusyAttribute, kAXEnabledAttribute,
     kAXFocusedApplicationAttribute, kAXFocusedAttribute, kAXFocusedUIElementAttribute,
     kAXHelpAttribute, kAXIdentifierAttribute, kAXLabelValueAttribute,
     kAXLineForIndexParameterizedAttribute, kAXMainAttribute, kAXMaxValueAttribute,
     kAXMinValueAttribute, kAXMinimizedAttribute, kAXParentAttribute, kAXPlaceholderValueAttribute,
-    kAXPositionAttribute, kAXRangeForLineParameterizedAttribute, kAXRoleAttribute,
-    kAXRoleDescriptionAttribute, kAXSelectedChildrenAttribute, kAXSelectedTextAttribute,
-    kAXSelectedTextRangeAttribute, kAXSizeAttribute, kAXSubroleAttribute, kAXTitleAttribute,
-    kAXTopLevelUIElementAttribute, kAXValueAttribute, kAXValueDescriptionAttribute,
-    kAXValueIncrementAttribute, kAXVisibleChildrenAttribute, kAXWindowAttribute,
-    kAXWindowsAttribute,
+    kAXPositionAttribute, kAXRangeForLineParameterizedAttribute,
+    kAXRangeForPositionParameterizedAttribute, kAXRoleAttribute, kAXRoleDescriptionAttribute,
+    kAXSelectedChildrenAttribute, kAXSelectedTextAttribute, kAXSelectedTextRangeAttribute,
+    kAXSizeAttribute, kAXSubroleAttribute, kAXTitleAttribute, kAXTopLevelUIElementAttribute,
+    kAXValueAttribute, kAXValueDescriptionAttribute, kAXValueIncrementAttribute,
+    kAXVisibleChildrenAttribute, kAXWindowAttribute, kAXWindowsAttribute,
 };
 use core_foundation::{
     array::CFArray,
@@ -159,5 +161,20 @@ define_attributes![
         range_for_line,
         AXValue,
         kAXRangeForLineParameterizedAttribute
+    ),
+    (
+        range_for_position,
+        AXValue,
+        kAXRangeForPositionParameterizedAttribute
+    ),
+    (
+        next_line_range_for_index,
+        AXValue,
+        kAXAXNextLineRangeForIndexParameterizedAttribute
+    ),
+    (
+        previous_line_range_for_index,
+        AXValue,
+        kAXAXPreviousLineRangeForIndexParameterizedAttribute
     ),
 ];
