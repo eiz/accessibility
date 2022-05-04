@@ -2,9 +2,10 @@ use accessibility_sys::{
     kAXAllowedValuesAttribute, kAXBoundsForRangeParameterizedAttribute, kAXChildrenAttribute,
     kAXContentsAttribute, kAXDescriptionAttribute, kAXElementBusyAttribute, kAXEnabledAttribute,
     kAXFocusedApplicationAttribute, kAXFocusedAttribute, kAXFocusedUIElementAttribute,
-    kAXHelpAttribute, kAXIdentifierAttribute, kAXLabelValueAttribute, kAXMainAttribute,
-    kAXMaxValueAttribute, kAXMinValueAttribute, kAXMinimizedAttribute, kAXParentAttribute,
-    kAXPlaceholderValueAttribute, kAXPositionAttribute, kAXRoleAttribute,
+    kAXHelpAttribute, kAXIdentifierAttribute, kAXLabelValueAttribute,
+    kAXLineForIndexParameterizedAttribute, kAXMainAttribute, kAXMaxValueAttribute,
+    kAXMinValueAttribute, kAXMinimizedAttribute, kAXParentAttribute, kAXPlaceholderValueAttribute,
+    kAXPositionAttribute, kAXRangeForLineParameterizedAttribute, kAXRoleAttribute,
     kAXRoleDescriptionAttribute, kAXSelectedChildrenAttribute, kAXSelectedTextAttribute,
     kAXSelectedTextRangeAttribute, kAXSizeAttribute, kAXSubroleAttribute, kAXTitleAttribute,
     kAXTopLevelUIElementAttribute, kAXValueAttribute, kAXValueDescriptionAttribute,
@@ -15,6 +16,7 @@ use core_foundation::{
     array::CFArray,
     base::{CFType, TCFType},
     boolean::CFBoolean,
+    number::CFNumber,
     string::CFString,
 };
 use std::marker::PhantomData;
@@ -147,5 +149,15 @@ define_attributes![
         bounds_for_range,
         AXValue,
         kAXBoundsForRangeParameterizedAttribute
+    ),
+    (
+        line_for_index,
+        CFNumber,
+        kAXLineForIndexParameterizedAttribute
+    ),
+    (
+        range_for_line,
+        AXValue,
+        kAXRangeForLineParameterizedAttribute
     ),
 ];

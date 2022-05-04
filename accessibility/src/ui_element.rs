@@ -6,8 +6,9 @@ use std::{
 use accessibility_sys::{
     pid_t, AXUIElementCopyActionNames, AXUIElementCopyAttributeNames,
     AXUIElementCopyAttributeValue, AXUIElementCopyParameterizedAttributeNames,
-    AXUIElementCreateApplication, AXUIElementCreateSystemWide, AXUIElementGetPid,
-    AXUIElementGetTypeID, AXUIElementIsAttributeSettable, AXUIElementPerformAction, AXUIElementRef,
+    AXUIElementCopyParameterizedAttributeValue, AXUIElementCreateApplication,
+    AXUIElementCreateSystemWide, AXUIElementGetPid, AXUIElementGetTypeID,
+    AXUIElementIsAttributeSettable, AXUIElementPerformAction, AXUIElementRef,
     AXUIElementSetAttributeValue,
 };
 use cocoa::{
@@ -153,6 +154,26 @@ impl AXUIElement {
                 )
             })
             .map_err(Error::Ax)?)
+        }
+    }
+
+    pub fn parameterized_attribute<T: TCFType, U: TCFType>(
+        &self,
+        attribute: &AXAttribute<T>,
+        parameter: &U,
+    ) -> Result<T, Error> {
+        unsafe {
+            Ok(T::wrap_under_create_rule(T::Ref::from_void_ptr(
+                ax_call(|x| {
+                    AXUIElementCopyParameterizedAttributeValue(
+                        self.0,
+                        attribute.as_CFString().as_concrete_TypeRef(),
+                        parameter.as_CFTypeRef(),
+                        x,
+                    )
+                })
+                .map_err(Error::Ax)?,
+            )))
         }
     }
 
