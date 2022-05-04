@@ -1,13 +1,15 @@
 use accessibility_sys::{
-    kAXAllowedValuesAttribute, kAXChildrenAttribute, kAXContentsAttribute, kAXDescriptionAttribute,
-    kAXElementBusyAttribute, kAXEnabledAttribute, kAXFocusedApplicationAttribute,
-    kAXFocusedAttribute, kAXFocusedUIElementAttribute, kAXHelpAttribute, kAXIdentifierAttribute,
-    kAXLabelValueAttribute, kAXMainAttribute, kAXMaxValueAttribute, kAXMinValueAttribute,
-    kAXMinimizedAttribute, kAXParentAttribute, kAXPlaceholderValueAttribute, kAXPositionAttribute,
-    kAXRoleAttribute, kAXRoleDescriptionAttribute, kAXSelectedChildrenAttribute, kAXSizeAttribute,
-    kAXSubroleAttribute, kAXTitleAttribute, kAXTopLevelUIElementAttribute, kAXValueAttribute,
-    kAXValueDescriptionAttribute, kAXValueIncrementAttribute, kAXVisibleChildrenAttribute,
-    kAXWindowAttribute, kAXWindowsAttribute,
+    kAXAllowedValuesAttribute, kAXBoundsForRangeParameterizedAttribute, kAXChildrenAttribute,
+    kAXContentsAttribute, kAXDescriptionAttribute, kAXElementBusyAttribute, kAXEnabledAttribute,
+    kAXFocusedApplicationAttribute, kAXFocusedAttribute, kAXFocusedUIElementAttribute,
+    kAXHelpAttribute, kAXIdentifierAttribute, kAXLabelValueAttribute, kAXMainAttribute,
+    kAXMaxValueAttribute, kAXMinValueAttribute, kAXMinimizedAttribute, kAXParentAttribute,
+    kAXPlaceholderValueAttribute, kAXPositionAttribute, kAXRoleAttribute,
+    kAXRoleDescriptionAttribute, kAXSelectedChildrenAttribute, kAXSelectedTextAttribute,
+    kAXSelectedTextRangeAttribute, kAXSizeAttribute, kAXSubroleAttribute, kAXTitleAttribute,
+    kAXTopLevelUIElementAttribute, kAXValueAttribute, kAXValueDescriptionAttribute,
+    kAXValueIncrementAttribute, kAXVisibleChildrenAttribute, kAXWindowAttribute,
+    kAXWindowsAttribute,
 };
 use core_foundation::{
     array::CFArray,
@@ -122,6 +124,8 @@ define_attributes![
     ),
     (subrole, CFString, kAXSubroleAttribute),
     (size, AXValue, kAXSizeAttribute),
+    (selected_text, CFString, kAXSelectedTextAttribute),
+    (selected_text_range, AXValue, kAXSelectedTextRangeAttribute),
     (title, CFString, kAXTitleAttribute),
     (
         top_level_ui_element,
@@ -138,4 +142,10 @@ define_attributes![
     ),
     (window, AXUIElement, kAXWindowAttribute),
     (windows, CFArray<AXUIElement>, kAXWindowsAttribute),
+    // parameterized attributes
+    (
+        bounds_for_range,
+        AXValue,
+        kAXBoundsForRangeParameterizedAttribute
+    ),
 ];
