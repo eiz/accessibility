@@ -4,11 +4,11 @@ use std::{
 };
 
 use accessibility_sys::{
-    pid_t, AXUIElementCopyActionNames, AXUIElementCopyAttributeNames,
-    AXUIElementCopyAttributeValue, AXUIElementCopyParameterizedAttributeNames,
-    AXUIElementCopyParameterizedAttributeValue, AXUIElementCreateApplication,
-    AXUIElementCreateSystemWide, AXUIElementGetPid, AXUIElementGetTypeID,
-    AXUIElementIsAttributeSettable, AXUIElementPerformAction, AXUIElementRef,
+    kAXTrustedCheckOptionPrompt, pid_t, AXIsProcessTrusted, AXIsProcessTrustedWithOptions,
+    AXUIElementCopyActionNames, AXUIElementCopyAttributeNames, AXUIElementCopyAttributeValue,
+    AXUIElementCopyParameterizedAttributeNames, AXUIElementCopyParameterizedAttributeValue,
+    AXUIElementCreateApplication, AXUIElementCreateSystemWide, AXUIElementGetPid,
+    AXUIElementGetTypeID, AXUIElementIsAttributeSettable, AXUIElementPerformAction, AXUIElementRef,
     AXUIElementSetAttributeValue,
 };
 use cocoa::{
@@ -18,7 +18,10 @@ use cocoa::{
 use core_foundation::{
     array::CFArray,
     base::{TCFType, TCFTypeRef},
-    declare_TCFType, impl_CFTypeDescription, impl_TCFType,
+    boolean::CFBoolean,
+    declare_TCFType,
+    dictionary::CFDictionary,
+    impl_CFTypeDescription, impl_TCFType,
     string::CFString,
 };
 use objc::{class, msg_send, rc::autoreleasepool, sel, sel_impl};
@@ -191,6 +194,24 @@ impl AXUIElement {
                 ax_call_void(|| AXUIElementPerformAction(self.0, name.as_concrete_TypeRef()))
                     .map_err(Error::Ax)?,
             )
+        }
+    }
+
+    /// Checks whether or not this application is a trusted accessibility client.
+    pub fn application_is_trusted() -> bool {
+        unsafe {
+            return AXIsProcessTrusted();
+        }
+    }
+
+    /// Same as [application_is_trusted], but also shows the user a prompt asking
+    /// them to allow accessibility API access if it hasn't already been given.
+    pub fn application_is_trusted_with_prompt() -> bool {
+        unsafe {
+            let option_prompt = CFString::wrap_under_get_rule(kAXTrustedCheckOptionPrompt);
+            let dict: CFDictionary<CFString, CFBoolean> =
+                CFDictionary::from_CFType_pairs(&[(option_prompt, CFBoolean::true_value())]);
+            return AXIsProcessTrustedWithOptions(dict.as_concrete_TypeRef());
         }
     }
 }
