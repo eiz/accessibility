@@ -2,7 +2,7 @@ use accessibility_sys::{
     kAXAXNextLineRangeForIndexParameterizedAttribute,
     kAXAXPreviousLineRangeForIndexParameterizedAttribute, kAXAllowedValuesAttribute,
     kAXBoundsForRangeParameterizedAttribute, kAXChildrenAttribute, kAXContentsAttribute,
-    kAXDescriptionAttribute, kAXElementBusyAttribute, kAXEnabledAttribute,
+    kAXDescriptionAttribute, kAXDocumentAttribute, kAXElementBusyAttribute, kAXEnabledAttribute,
     kAXFocusedApplicationAttribute, kAXFocusedAttribute, kAXFocusedUIElementAttribute,
     kAXHelpAttribute, kAXIdentifierAttribute, kAXLabelValueAttribute,
     kAXLineForIndexParameterizedAttribute, kAXMainAttribute, kAXMaxValueAttribute,
@@ -99,6 +99,7 @@ define_attributes![
     (children, CFArray<AXUIElement>, kAXChildrenAttribute),
     (contents, AXUIElement, kAXContentsAttribute),
     (description, CFString, kAXDescriptionAttribute),
+    (document, CFString, kAXDocumentAttribute),
     (element_busy, CFBoolean, kAXElementBusyAttribute),
     (enabled, CFBoolean, kAXEnabledAttribute),
     (
