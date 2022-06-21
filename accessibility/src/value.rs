@@ -97,7 +97,7 @@ impl AXValue {
                     }
                 }
                 kAXValueTypeCFRange => {
-                    if std::any::type_name::<T>() != "core_foundation::base::CFRange" {
+                    if std::any::type_name::<T>() != "core_foundation_sys::base::CFRange" {
                         return Err(Error::Ax(helper_u32_to_i32(kAXValueTypeAXError)));
                     }
                 }
