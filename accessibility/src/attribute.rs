@@ -119,17 +119,17 @@ define_attributes![
     (max_value, CFType, kAXMaxValueAttribute),
     (
         menu_item_cmd_modifier,
-        CFString,
+        CFType,
         kAXMenuItemCmdModifiersAttribute
     ),
-    (menu_item_cmd_char, CFString, kAXMenuItemCmdCharAttribute),
+    (menu_item_cmd_char, CFType, kAXMenuItemCmdCharAttribute),
     (
         menu_item_cmd_virtual_key,
-        CFString,
+        CFType,
         kAXMenuItemCmdVirtualKeyAttribute
     ),
-    (menu_item_mark_char, CFString, kAXMenuItemMarkCharAttribute),
-    (menu_item_cmd_glyph, CFString, kAXMenuItemCmdGlyphAttribute),
+    (menu_item_mark_char, CFType, kAXMenuItemMarkCharAttribute),
+    (menu_item_cmd_glyph, CFType, kAXMenuItemCmdGlyphAttribute),
     (min_value, CFType, kAXMinValueAttribute),
     (minimized, CFBoolean, kAXMinimizedAttribute),
     (parent, AXUIElement, kAXParentAttribute),
