@@ -122,7 +122,7 @@ define_attributes![
         CFNumber,
         kAXMenuItemCmdModifiersAttribute
     ),
-    (menu_item_cmd_char, CFType, kAXMenuItemCmdCharAttribute),
+    (menu_item_cmd_char, CFString, kAXMenuItemCmdCharAttribute),
     (
         menu_item_cmd_virtual_key,
         CFString,
