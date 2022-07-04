@@ -6,13 +6,15 @@ use accessibility_sys::{
     kAXFocusedApplicationAttribute, kAXFocusedAttribute, kAXFocusedUIElementAttribute,
     kAXHelpAttribute, kAXIdentifierAttribute, kAXLabelValueAttribute,
     kAXLineForIndexParameterizedAttribute, kAXMainAttribute, kAXMaxValueAttribute,
-    kAXMinValueAttribute, kAXMinimizedAttribute, kAXParentAttribute, kAXPlaceholderValueAttribute,
-    kAXPositionAttribute, kAXRangeForLineParameterizedAttribute,
-    kAXRangeForPositionParameterizedAttribute, kAXRoleAttribute, kAXRoleDescriptionAttribute,
-    kAXSelectedChildrenAttribute, kAXSelectedTextAttribute, kAXSelectedTextRangeAttribute,
-    kAXSizeAttribute, kAXSubroleAttribute, kAXTitleAttribute, kAXTopLevelUIElementAttribute,
-    kAXValueAttribute, kAXValueDescriptionAttribute, kAXValueIncrementAttribute,
-    kAXVisibleChildrenAttribute, kAXWindowAttribute, kAXWindowsAttribute,
+    kAXMenuItemCmdCharAttribute, kAXMenuItemCmdGlyphAttribute, kAXMenuItemCmdModifiersAttribute,
+    kAXMenuItemCmdVirtualKeyAttribute, kAXMenuItemMarkCharAttribute, kAXMinValueAttribute,
+    kAXMinimizedAttribute, kAXParentAttribute, kAXPlaceholderValueAttribute, kAXPositionAttribute,
+    kAXRangeForLineParameterizedAttribute, kAXRangeForPositionParameterizedAttribute,
+    kAXRoleAttribute, kAXRoleDescriptionAttribute, kAXSelectedChildrenAttribute,
+    kAXSelectedTextAttribute, kAXSelectedTextRangeAttribute, kAXSizeAttribute, kAXSubroleAttribute,
+    kAXTitleAttribute, kAXTopLevelUIElementAttribute, kAXValueAttribute,
+    kAXValueDescriptionAttribute, kAXValueIncrementAttribute, kAXVisibleChildrenAttribute,
+    kAXWindowAttribute, kAXWindowsAttribute,
 };
 use core_foundation::{
     array::CFArray,
@@ -115,9 +117,17 @@ define_attributes![
     (label_value, CFString, kAXLabelValueAttribute),
     (main, CFBoolean, kAXMainAttribute, set_main),
     (max_value, CFType, kAXMaxValueAttribute),
-    (menu_item_cmd_modifier, CFString, kAXMenuItemCmdModifiersAttribute),
+    (
+        menu_item_cmd_modifier,
+        CFString,
+        kAXMenuItemCmdModifiersAttribute
+    ),
     (menu_item_cmd_char, CFString, kAXMenuItemCmdCharAttribute),
-    (menu_item_cmd_virtual_key, CFString, kAXMenuItemCmdVirtualKeyAttribute),
+    (
+        menu_item_cmd_virtual_key,
+        CFString,
+        kAXMenuItemCmdVirtualKeyAttribute
+    ),
     (menu_item_mark_char, CFString, kAXMenuItemMarkCharAttribute),
     (menu_item_cmd_glyph, CFString, kAXMenuItemCmdGlyphAttribute),
     (min_value, CFType, kAXMinValueAttribute),
