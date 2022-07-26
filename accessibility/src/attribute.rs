@@ -13,8 +13,8 @@ use accessibility_sys::{
     kAXRoleAttribute, kAXRoleDescriptionAttribute, kAXSelectedChildrenAttribute,
     kAXSelectedTextAttribute, kAXSelectedTextRangeAttribute, kAXSizeAttribute, kAXSubroleAttribute,
     kAXTitleAttribute, kAXTopLevelUIElementAttribute, kAXValueAttribute,
-    kAXValueDescriptionAttribute, kAXValueIncrementAttribute, kAXVisibleChildrenAttribute,
-    kAXWindowAttribute, kAXWindowsAttribute,
+    kAXValueDescriptionAttribute, kAXValueIncrementAttribute, kAXVisibleCharacterRangeAttribute,
+    kAXVisibleChildrenAttribute, kAXWindowAttribute, kAXWindowsAttribute,
 };
 use core_foundation::{
     array::CFArray,
@@ -162,6 +162,11 @@ define_attributes![
     ),
     (window, AXUIElement, kAXWindowAttribute),
     (windows, CFArray<AXUIElement>, kAXWindowsAttribute),
+    (
+        visible_character_range,
+        AXValue,
+        kAXVisibleCharacterRangeAttribute
+    ),
     // parameterized attributes
     (
         bounds_for_range,
