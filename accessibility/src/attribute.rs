@@ -4,7 +4,7 @@ use accessibility_sys::{
     kAXBoundsForRangeParameterizedAttribute, kAXChildrenAttribute, kAXContentsAttribute,
     kAXDescriptionAttribute, kAXDocumentAttribute, kAXElementBusyAttribute, kAXEnabledAttribute,
     kAXFocusedApplicationAttribute, kAXFocusedAttribute, kAXFocusedUIElementAttribute,
-    kAXHelpAttribute, kAXIdentifierAttribute, kAXLabelValueAttribute,
+    kAXFrameAttribute, kAXHelpAttribute, kAXIdentifierAttribute, kAXLabelValueAttribute,
     kAXLineForIndexParameterizedAttribute, kAXMainAttribute, kAXMaxValueAttribute,
     kAXMenuItemCmdCharAttribute, kAXMenuItemCmdGlyphAttribute, kAXMenuItemCmdModifiersAttribute,
     kAXMenuItemCmdVirtualKeyAttribute, kAXMenuItemMarkCharAttribute, kAXMinValueAttribute,
