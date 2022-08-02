@@ -111,7 +111,7 @@ define_attributes![
     ),
     (focused_uielement, AXUIElement, kAXFocusedUIElementAttribute),
     (focused, CFBoolean, kAXFocusedAttribute),
-    (frame, AXValue, kAXFocusedAttribute),
+    (frame, AXValue, kAXFrameAttribute),
     (help, CFString, kAXHelpAttribute),
     (identifier, CFString, kAXIdentifierAttribute),
     (label_value, CFString, kAXLabelValueAttribute),
