@@ -35,6 +35,8 @@ declare_TCFType!(AXUIElement, AXUIElementRef);
 impl_TCFType!(AXUIElement, AXUIElementRef, AXUIElementGetTypeID);
 impl_CFTypeDescription!(AXUIElement);
 
+unsafe impl Send for AXUIElement {}
+
 impl AXUIElement {
     pub fn system_wide() -> Self {
         unsafe { Self::wrap_under_create_rule(AXUIElementCreateSystemWide()) }
