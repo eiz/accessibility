@@ -24,6 +24,8 @@ declare_TCFType!(AXObserver, AXObserverRef);
 impl_TCFType!(AXObserver, AXObserverRef, AXObserverGetTypeID);
 impl_CFTypeDescription!(AXObserver);
 
+unsafe impl Send for AXObserver {}
+
 impl AXObserver {
     pub fn new(pid: pid_t, callback: AXObserverCallback) -> Result<Self, Error> {
         unsafe {
