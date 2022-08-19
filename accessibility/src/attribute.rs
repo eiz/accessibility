@@ -1,12 +1,13 @@
 use accessibility_sys::{
     kAXAXNextLineRangeForIndexParameterizedAttribute,
     kAXAXPreviousLineRangeForIndexParameterizedAttribute, kAXAllowedValuesAttribute,
-    kAXBoundsForRangeParameterizedAttribute, kAXChildrenAttribute, kAXContentsAttribute,
-    kAXDescriptionAttribute, kAXDocumentAttribute, kAXElementBusyAttribute, kAXEnabledAttribute,
-    kAXFocusedApplicationAttribute, kAXFocusedAttribute, kAXFocusedUIElementAttribute,
-    kAXFrameAttribute, kAXHelpAttribute, kAXIdentifierAttribute, kAXLabelValueAttribute,
-    kAXLineForIndexParameterizedAttribute, kAXMainAttribute, kAXMaxValueAttribute,
-    kAXMenuItemCmdCharAttribute, kAXMenuItemCmdGlyphAttribute, kAXMenuItemCmdModifiersAttribute,
+    kAXAttributedStringForRangeParameterizedAttribute, kAXBoundsForRangeParameterizedAttribute,
+    kAXChildrenAttribute, kAXContentsAttribute, kAXDescriptionAttribute, kAXDocumentAttribute,
+    kAXElementBusyAttribute, kAXEnabledAttribute, kAXFocusedApplicationAttribute,
+    kAXFocusedAttribute, kAXFocusedUIElementAttribute, kAXFrameAttribute, kAXHelpAttribute,
+    kAXIdentifierAttribute, kAXLabelValueAttribute, kAXLineForIndexParameterizedAttribute,
+    kAXMainAttribute, kAXMaxValueAttribute, kAXMenuItemCmdCharAttribute,
+    kAXMenuItemCmdGlyphAttribute, kAXMenuItemCmdModifiersAttribute,
     kAXMenuItemCmdVirtualKeyAttribute, kAXMenuItemMarkCharAttribute, kAXMinValueAttribute,
     kAXMinimizedAttribute, kAXParentAttribute, kAXPlaceholderValueAttribute, kAXPositionAttribute,
     kAXRangeForLineParameterizedAttribute, kAXRangeForPositionParameterizedAttribute,
@@ -18,6 +19,7 @@ use accessibility_sys::{
 };
 use core_foundation::{
     array::CFArray,
+    attributed_string::CFAttributedString,
     base::{CFType, TCFType},
     boolean::CFBoolean,
     number::CFNumber,
@@ -197,5 +199,10 @@ define_attributes![
         previous_line_range_for_index,
         AXValue,
         kAXAXPreviousLineRangeForIndexParameterizedAttribute
+    ),
+    (
+        attributed_string_for_range,
+        CFAttributedString,
+        kAXAttributedStringForRangeParameterizedAttribute
     ),
 ];
