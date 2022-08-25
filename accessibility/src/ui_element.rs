@@ -36,6 +36,7 @@ impl_TCFType!(AXUIElement, AXUIElementRef, AXUIElementGetTypeID);
 impl_CFTypeDescription!(AXUIElement);
 
 unsafe impl Send for AXUIElement {}
+unsafe impl Sync for AXUIElement {}
 
 impl AXUIElement {
     pub fn system_wide() -> Self {
