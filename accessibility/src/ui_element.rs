@@ -1,4 +1,5 @@
 use std::{
+    hash::{Hash, Hasher},
     thread,
     time::{Duration, Instant},
 };
@@ -216,5 +217,11 @@ impl AXUIElement {
                 CFDictionary::from_CFType_pairs(&[(option_prompt, CFBoolean::true_value())]);
             return AXIsProcessTrustedWithOptions(dict.as_concrete_TypeRef());
         }
+    }
+}
+
+impl Hash for AXUIElement {
+    fn hash<H: Hasher>(&self, state: &mut H) {
+        self.0.hash(state);
     }
 }
