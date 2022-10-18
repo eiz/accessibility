@@ -9,13 +9,14 @@ use accessibility_sys::{
     kAXMainAttribute, kAXMaxValueAttribute, kAXMenuItemCmdCharAttribute,
     kAXMenuItemCmdGlyphAttribute, kAXMenuItemCmdModifiersAttribute,
     kAXMenuItemCmdVirtualKeyAttribute, kAXMenuItemMarkCharAttribute, kAXMinValueAttribute,
-    kAXMinimizedAttribute, kAXParentAttribute, kAXPlaceholderValueAttribute, kAXPositionAttribute,
-    kAXRangeForLineParameterizedAttribute, kAXRangeForPositionParameterizedAttribute,
-    kAXRoleAttribute, kAXRoleDescriptionAttribute, kAXSelectedChildrenAttribute,
-    kAXSelectedTextAttribute, kAXSelectedTextRangeAttribute, kAXSizeAttribute, kAXSubroleAttribute,
-    kAXTitleAttribute, kAXTopLevelUIElementAttribute, kAXValueAttribute,
-    kAXValueDescriptionAttribute, kAXValueIncrementAttribute, kAXVisibleCharacterRangeAttribute,
-    kAXVisibleChildrenAttribute, kAXWindowAttribute, kAXWindowsAttribute,
+    kAXMinimizedAttribute, kAXNumberOfCharactersAttribute, kAXParentAttribute,
+    kAXPlaceholderValueAttribute, kAXPositionAttribute, kAXRangeForLineParameterizedAttribute,
+    kAXRangeForPositionParameterizedAttribute, kAXRoleAttribute, kAXRoleDescriptionAttribute,
+    kAXSelectedChildrenAttribute, kAXSelectedTextAttribute, kAXSelectedTextRangeAttribute,
+    kAXSizeAttribute, kAXSubroleAttribute, kAXTitleAttribute, kAXTopLevelUIElementAttribute,
+    kAXValueAttribute, kAXValueDescriptionAttribute, kAXValueIncrementAttribute,
+    kAXVisibleCharacterRangeAttribute, kAXVisibleChildrenAttribute, kAXWindowAttribute,
+    kAXWindowsAttribute,
 };
 use core_foundation::{
     array::CFArray,
@@ -134,6 +135,11 @@ define_attributes![
     (menu_item_cmd_glyph, CFString, kAXMenuItemCmdGlyphAttribute),
     (min_value, CFType, kAXMinValueAttribute),
     (minimized, CFBoolean, kAXMinimizedAttribute),
+    (
+        number_of_characters,
+        CFNumber,
+        kAXNumberOfCharactersAttribute
+    ),
     (parent, AXUIElement, kAXParentAttribute),
     (placeholder_value, CFString, kAXPlaceholderValueAttribute),
     (position, AXValue, kAXPositionAttribute),
