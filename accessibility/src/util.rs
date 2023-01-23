@@ -15,9 +15,9 @@ where
     Ok(result.assume_init())
 }
 
-pub(crate) unsafe fn ax_call_void<F>(f: F) -> Result<(), AXError>
+pub(crate) unsafe fn ax_call_void<F>(mut f: F) -> Result<(), AXError>
 where
-    F: Fn() -> AXError,
+    F: FnMut() -> AXError,
 {
     let err = (f)();
 

@@ -1,12 +1,16 @@
 use std::{
+    hash::{Hash, Hasher},
     thread,
     time::{Duration, Instant},
 };
 
 use accessibility_sys::{
-    pid_t, AXUIElementCopyActionNames, AXUIElementCopyAttributeNames,
-    AXUIElementCopyAttributeValue, AXUIElementCreateApplication, AXUIElementCreateSystemWide,
-    AXUIElementGetTypeID, AXUIElementPerformAction, AXUIElementRef, AXUIElementSetAttributeValue,
+    kAXTrustedCheckOptionPrompt, pid_t, AXIsProcessTrusted, AXIsProcessTrustedWithOptions,
+    AXUIElementCopyActionNames, AXUIElementCopyAttributeNames, AXUIElementCopyAttributeValue,
+    AXUIElementCopyParameterizedAttributeNames, AXUIElementCopyParameterizedAttributeValue,
+    AXUIElementCreateApplication, AXUIElementCreateSystemWide, AXUIElementGetPid,
+    AXUIElementGetTypeID, AXUIElementIsAttributeSettable, AXUIElementPerformAction, AXUIElementRef,
+    AXUIElementSetAttributeValue,
 };
 use cocoa::{
     base::{id, nil},
@@ -15,7 +19,10 @@ use cocoa::{
 use core_foundation::{
     array::CFArray,
     base::{TCFType, TCFTypeRef},
-    declare_TCFType, impl_CFTypeDescription, impl_TCFType,
+    boolean::CFBoolean,
+    declare_TCFType,
+    dictionary::CFDictionary,
+    impl_CFTypeDescription, impl_TCFType,
     string::CFString,
 };
 use objc::{class, msg_send, rc::autoreleasepool, sel, sel_impl};
@@ -28,6 +35,9 @@ use crate::{
 declare_TCFType!(AXUIElement, AXUIElementRef);
 impl_TCFType!(AXUIElement, AXUIElementRef, AXUIElementGetTypeID);
 impl_CFTypeDescription!(AXUIElement);
+
+unsafe impl Send for AXUIElement {}
+unsafe impl Sync for AXUIElement {}
 
 impl AXUIElement {
     pub fn system_wide() -> Self {
@@ -83,10 +93,23 @@ impl AXUIElement {
         }
     }
 
+    pub fn pid(&self) -> Result<pid_t, Error> {
+        unsafe { Ok(ax_call(|x| AXUIElementGetPid(self.0, x)).map_err(Error::Ax)?) }
+    }
+
     pub fn attribute_names(&self) -> Result<CFArray<CFString>, Error> {
         unsafe {
             Ok(CFArray::wrap_under_create_rule(
                 ax_call(|x| AXUIElementCopyAttributeNames(self.0, x)).map_err(Error::Ax)?,
+            ))
+        }
+    }
+
+    pub fn parameterized_attribute_names(&self) -> Result<CFArray<CFString>, Error> {
+        unsafe {
+            Ok(CFArray::wrap_under_create_rule(
+                ax_call(|x| AXUIElementCopyParameterizedAttributeNames(self.0, x))
+                    .map_err(Error::Ax)?,
             ))
         }
     }
@@ -125,6 +148,42 @@ impl AXUIElement {
         }
     }
 
+    pub fn is_attribute_settable<T: TCFType>(
+        &self,
+        attribute: &AXAttribute<T>,
+    ) -> Result<bool, Error> {
+        unsafe {
+            Ok(ax_call(|x| {
+                AXUIElementIsAttributeSettable(
+                    self.0,
+                    attribute.as_CFString().as_concrete_TypeRef(),
+                    x,
+                )
+            })
+            .map_err(Error::Ax)?)
+        }
+    }
+
+    pub fn parameterized_attribute<T: TCFType, U: TCFType>(
+        &self,
+        attribute: &AXAttribute<T>,
+        parameter: &U,
+    ) -> Result<T, Error> {
+        unsafe {
+            Ok(T::wrap_under_create_rule(T::Ref::from_void_ptr(
+                ax_call(|x| {
+                    AXUIElementCopyParameterizedAttributeValue(
+                        self.0,
+                        attribute.as_CFString().as_concrete_TypeRef(),
+                        parameter.as_CFTypeRef(),
+                        x,
+                    )
+                })
+                .map_err(Error::Ax)?,
+            )))
+        }
+    }
+
     pub fn action_names(&self) -> Result<CFArray<CFString>, Error> {
         unsafe {
             Ok(CFArray::wrap_under_create_rule(
@@ -140,5 +199,29 @@ impl AXUIElement {
                     .map_err(Error::Ax)?,
             )
         }
+    }
+
+    /// Checks whether or not this application is a trusted accessibility client.
+    pub fn application_is_trusted() -> bool {
+        unsafe {
+            return AXIsProcessTrusted();
+        }
+    }
+
+    /// Same as [application_is_trusted], but also shows the user a prompt asking
+    /// them to allow accessibility API access if it hasn't already been given.
+    pub fn application_is_trusted_with_prompt() -> bool {
+        unsafe {
+            let option_prompt = CFString::wrap_under_get_rule(kAXTrustedCheckOptionPrompt);
+            let dict: CFDictionary<CFString, CFBoolean> =
+                CFDictionary::from_CFType_pairs(&[(option_prompt, CFBoolean::true_value())]);
+            return AXIsProcessTrustedWithOptions(dict.as_concrete_TypeRef());
+        }
+    }
+}
+
+impl Hash for AXUIElement {
+    fn hash<H: Hasher>(&self, state: &mut H) {
+        self.0.hash(state);
     }
 }

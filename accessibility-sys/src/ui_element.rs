@@ -14,8 +14,12 @@ use crate::AXError;
 pub enum __AXUIElement {}
 pub type AXUIElementRef = *mut __AXUIElement;
 
+unsafe impl Send for __AXUIElement {}
+
 pub enum __AXObserver {}
 pub type AXObserverRef = *mut __AXObserver;
+
+unsafe impl Send for __AXObserver {}
 
 pub type AXCopyMultipleAttributeOptions = u32;
 pub const kAXCopyMultipleAttributeOptionStopOnError: u32 = 0x1;

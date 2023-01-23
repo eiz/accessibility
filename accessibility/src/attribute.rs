@@ -1,22 +1,34 @@
 use accessibility_sys::{
-    kAXAllowedValuesAttribute, kAXChildrenAttribute, kAXContentsAttribute, kAXDescriptionAttribute,
-    kAXElementBusyAttribute, kAXEnabledAttribute, kAXFocusedAttribute, kAXHelpAttribute,
-    kAXIdentifierAttribute, kAXLabelValueAttribute, kAXMainAttribute, kAXMaxValueAttribute,
-    kAXMinValueAttribute, kAXMinimizedAttribute, kAXParentAttribute, kAXPlaceholderValueAttribute,
-    kAXRoleAttribute, kAXRoleDescriptionAttribute, kAXSelectedChildrenAttribute,
-    kAXSubroleAttribute, kAXTitleAttribute, kAXTopLevelUIElementAttribute, kAXValueAttribute,
-    kAXValueDescriptionAttribute, kAXValueIncrementAttribute, kAXVisibleChildrenAttribute,
-    kAXWindowAttribute, kAXWindowsAttribute,
+    kAXAXNextLineRangeForIndexParameterizedAttribute,
+    kAXAXPreviousLineRangeForIndexParameterizedAttribute, kAXAllowedValuesAttribute,
+    kAXAttributedStringForRangeParameterizedAttribute, kAXBoundsForRangeParameterizedAttribute,
+    kAXChildrenAttribute, kAXContentsAttribute, kAXDescriptionAttribute, kAXDocumentAttribute,
+    kAXElementBusyAttribute, kAXEnabledAttribute, kAXFocusedApplicationAttribute,
+    kAXFocusedAttribute, kAXFocusedUIElementAttribute, kAXFrameAttribute, kAXHelpAttribute,
+    kAXIdentifierAttribute, kAXLabelValueAttribute, kAXLineForIndexParameterizedAttribute,
+    kAXMainAttribute, kAXMaxValueAttribute, kAXMenuItemCmdCharAttribute,
+    kAXMenuItemCmdGlyphAttribute, kAXMenuItemCmdModifiersAttribute,
+    kAXMenuItemCmdVirtualKeyAttribute, kAXMenuItemMarkCharAttribute, kAXMinValueAttribute,
+    kAXMinimizedAttribute, kAXNumberOfCharactersAttribute, kAXParentAttribute,
+    kAXPlaceholderValueAttribute, kAXPositionAttribute, kAXRangeForLineParameterizedAttribute,
+    kAXRangeForPositionParameterizedAttribute, kAXRoleAttribute, kAXRoleDescriptionAttribute,
+    kAXSelectedChildrenAttribute, kAXSelectedTextAttribute, kAXSelectedTextRangeAttribute,
+    kAXSizeAttribute, kAXSubroleAttribute, kAXTitleAttribute, kAXTopLevelUIElementAttribute,
+    kAXValueAttribute, kAXValueDescriptionAttribute, kAXValueIncrementAttribute,
+    kAXVisibleCharacterRangeAttribute, kAXVisibleChildrenAttribute, kAXWindowAttribute,
+    kAXWindowsAttribute,
 };
 use core_foundation::{
     array::CFArray,
+    attributed_string::CFAttributedString,
     base::{CFType, TCFType},
     boolean::CFBoolean,
+    number::CFNumber,
     string::CFString,
 };
 use std::marker::PhantomData;
 
-use crate::{AXUIElement, ElementFinder, Error};
+use crate::{AXUIElement, AXValue, ElementFinder, Error};
 
 pub trait TAXAttribute {
     type Value: TCFType;
@@ -92,18 +104,45 @@ define_attributes![
     (children, CFArray<AXUIElement>, kAXChildrenAttribute),
     (contents, AXUIElement, kAXContentsAttribute),
     (description, CFString, kAXDescriptionAttribute),
+    (document, CFString, kAXDocumentAttribute),
     (element_busy, CFBoolean, kAXElementBusyAttribute),
     (enabled, CFBoolean, kAXEnabledAttribute),
+    (
+        focused_application,
+        AXUIElement,
+        kAXFocusedApplicationAttribute
+    ),
+    (focused_uielement, AXUIElement, kAXFocusedUIElementAttribute),
     (focused, CFBoolean, kAXFocusedAttribute),
+    (frame, AXValue, kAXFrameAttribute),
     (help, CFString, kAXHelpAttribute),
     (identifier, CFString, kAXIdentifierAttribute),
     (label_value, CFString, kAXLabelValueAttribute),
     (main, CFBoolean, kAXMainAttribute, set_main),
     (max_value, CFType, kAXMaxValueAttribute),
+    (
+        menu_item_cmd_modifier,
+        CFNumber,
+        kAXMenuItemCmdModifiersAttribute
+    ),
+    (menu_item_cmd_char, CFString, kAXMenuItemCmdCharAttribute),
+    (
+        menu_item_cmd_virtual_key,
+        CFString,
+        kAXMenuItemCmdVirtualKeyAttribute
+    ),
+    (menu_item_mark_char, CFString, kAXMenuItemMarkCharAttribute),
+    (menu_item_cmd_glyph, CFString, kAXMenuItemCmdGlyphAttribute),
     (min_value, CFType, kAXMinValueAttribute),
     (minimized, CFBoolean, kAXMinimizedAttribute),
+    (
+        number_of_characters,
+        CFNumber,
+        kAXNumberOfCharactersAttribute
+    ),
     (parent, AXUIElement, kAXParentAttribute),
     (placeholder_value, CFString, kAXPlaceholderValueAttribute),
+    (position, AXValue, kAXPositionAttribute),
     (role, CFString, kAXRoleAttribute),
     (role_description, CFString, kAXRoleDescriptionAttribute),
     (
@@ -112,6 +151,9 @@ define_attributes![
         kAXSelectedChildrenAttribute
     ),
     (subrole, CFString, kAXSubroleAttribute),
+    (size, AXValue, kAXSizeAttribute),
+    (selected_text, CFString, kAXSelectedTextAttribute),
+    (selected_text_range, AXValue, kAXSelectedTextRangeAttribute),
     (title, CFString, kAXTitleAttribute),
     (
         top_level_ui_element,
@@ -128,4 +170,45 @@ define_attributes![
     ),
     (window, AXUIElement, kAXWindowAttribute),
     (windows, CFArray<AXUIElement>, kAXWindowsAttribute),
+    (
+        visible_character_range,
+        AXValue,
+        kAXVisibleCharacterRangeAttribute
+    ),
+    // parameterized attributes
+    (
+        bounds_for_range,
+        AXValue,
+        kAXBoundsForRangeParameterizedAttribute
+    ),
+    (
+        line_for_index,
+        CFNumber,
+        kAXLineForIndexParameterizedAttribute
+    ),
+    (
+        range_for_line,
+        AXValue,
+        kAXRangeForLineParameterizedAttribute
+    ),
+    (
+        range_for_position,
+        AXValue,
+        kAXRangeForPositionParameterizedAttribute
+    ),
+    (
+        next_line_range_for_index,
+        AXValue,
+        kAXAXNextLineRangeForIndexParameterizedAttribute
+    ),
+    (
+        previous_line_range_for_index,
+        AXValue,
+        kAXAXPreviousLineRangeForIndexParameterizedAttribute
+    ),
+    (
+        attributed_string_for_range,
+        CFAttributedString,
+        kAXAttributedStringForRangeParameterizedAttribute
+    ),
 ];
