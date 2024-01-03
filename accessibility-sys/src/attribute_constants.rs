@@ -20,6 +20,7 @@ pub const kAXSelectedChildrenAttribute: &str = "AXSelectedChildren";
 pub const kAXVisibleChildrenAttribute: &str = "AXVisibleChildren";
 pub const kAXWindowAttribute: &str = "AXWindow";
 pub const kAXTopLevelUIElementAttribute: &str = "AXTopLevelUIElement";
+pub const kAXFrameAttribute: &str = "AXFrame";
 pub const kAXPositionAttribute: &str = "AXPosition";
 pub const kAXSizeAttribute: &str = "AXSize";
 pub const kAXOrientationAttribute: &str = "AXOrientation";

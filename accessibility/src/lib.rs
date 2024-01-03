@@ -2,6 +2,7 @@ pub mod action;
 pub mod attribute;
 pub mod ui_element;
 mod util;
+pub mod value;
 
 use accessibility_sys::{error_string, AXError};
 use core_foundation::{
