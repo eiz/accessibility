@@ -3,7 +3,7 @@ pub mod attribute;
 pub mod ui_element;
 mod util;
 
-use accessibility_sys::AXError;
+use accessibility_sys::{error_string, AXError};
 use core_foundation::{
     array::CFArray,
     base::CFTypeID,
@@ -35,7 +35,7 @@ pub enum Error {
         expected: CFTypeID,
         received: CFTypeID,
     },
-    #[error("accessibility error {0:?}")]
+    #[error("accessibility error {}", error_string(*.0))]
     Ax(AXError),
 }
 
