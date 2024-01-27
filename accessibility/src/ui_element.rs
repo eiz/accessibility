@@ -7,6 +7,7 @@ use accessibility_sys::{
     pid_t, AXUIElementCopyActionNames, AXUIElementCopyAttributeNames,
     AXUIElementCopyAttributeValue, AXUIElementCreateApplication, AXUIElementCreateSystemWide,
     AXUIElementGetTypeID, AXUIElementPerformAction, AXUIElementRef, AXUIElementSetAttributeValue,
+    AXUIElementSetMessagingTimeout,
 };
 use cocoa::{
     base::{id, nil},
@@ -137,6 +138,15 @@ impl AXUIElement {
         unsafe {
             Ok(
                 ax_call_void(|| AXUIElementPerformAction(self.0, name.as_concrete_TypeRef()))
+                    .map_err(Error::Ax)?,
+            )
+        }
+    }
+
+    pub fn set_messaging_timeout(&self, timeout: f32) -> Result<(), Error> {
+        unsafe {
+            Ok(
+                ax_call_void(|| AXUIElementSetMessagingTimeout(self.0, timeout))
                     .map_err(Error::Ax)?,
             )
         }
