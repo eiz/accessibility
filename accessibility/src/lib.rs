@@ -2,8 +2,9 @@ pub mod action;
 pub mod attribute;
 pub mod ui_element;
 mod util;
+pub mod value;
 
-use accessibility_sys::{error_string, AXError};
+use accessibility_sys::{error_string, AXError, AXValueType};
 use core_foundation::{
     array::CFArray,
     base::CFTypeID,
@@ -34,6 +35,15 @@ pub enum Error {
     UnexpectedType {
         expected: CFTypeID,
         received: CFTypeID,
+    },
+    #[error(
+        "expected attribute value type {} but got {}",
+        value::value_type_name(*expected),
+        value::value_type_name(*received),
+    )]
+    UnexpectedValueType {
+        expected: AXValueType,
+        received: AXValueType,
     },
     #[error("accessibility error {}", error_string(*.0))]
     Ax(AXError),
