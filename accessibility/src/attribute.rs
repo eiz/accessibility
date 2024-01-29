@@ -65,7 +65,7 @@ macro_rules! accessor {
     (@impl $name:ident, AXValue<$typ:ty>, $const:ident, $setter:ident) => {
         accessor!(@impl $name, AXValue<$typ>, $const);
         fn $setter(&self, value: impl Into<$typ>) -> Result<(), Error> {
-            self.set_attribute(&AXAttribute::$name(), AXValue::new(&value.into()).expect("wrong type"))
+            self.set_attribute(&AXAttribute::$name(), AXValue::new(&value.into())?)
         }
     };
     (@impl $name:ident, $typ:ty, $const:ident, $setter:ident) => {
@@ -76,7 +76,7 @@ macro_rules! accessor {
     };
     (@impl $name:ident, AXValue<$typ:ty>, $const:ident) => {
         fn $name(&self) -> Result<$typ, Error> {
-            self.attribute(&AXAttribute::$name()).map(|v| v.value().expect("wrong type"))
+            self.attribute(&AXAttribute::$name()).and_then(|v| v.value())
         }
     };
     (@impl $name:ident, $typ:ty, $const:ident) => {
