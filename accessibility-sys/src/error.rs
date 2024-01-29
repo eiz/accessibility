@@ -17,3 +17,25 @@ pub const kAXErrorAPIDisabled: i32 = -25211;
 pub const kAXErrorNoValue: i32 = -25212;
 pub const kAXErrorParameterizedAttributeUnsupported: i32 = -25213;
 pub const kAXErrorNotEnoughPrecision: i32 = -25214;
+
+pub fn error_string(error: AXError) -> &'static str {
+    match error {
+        kAXErrorSuccess => "kAXErrorSuccess",
+        kAXErrorFailure => "kAXErrorFailure",
+        kAXErrorIllegalArgument => "kAXErrorIllegalArgument",
+        kAXErrorInvalidUIElement => "kAXErrorInvalidUIElement",
+        kAXErrorInvalidUIElementObserver => "kAXErrorInvalidUIElementObserver",
+        kAXErrorCannotComplete => "kAXErrorCannotComplete",
+        kAXErrorAttributeUnsupported => "kAXErrorAttributeUnsupported",
+        kAXErrorActionUnsupported => "kAXErrorActionUnsupported",
+        kAXErrorNotificationUnsupported => "kAXErrorNotificationUnsupported",
+        kAXErrorNotImplemented => "kAXErrorNotImplemented",
+        kAXErrorNotificationAlreadyRegistered => "kAXErrorNotificationAlreadyRegistered",
+        kAXErrorNotificationNotRegistered => "kAXErrorNotificationNotRegistered",
+        kAXErrorAPIDisabled => "kAXErrorAPIDisabled",
+        kAXErrorNoValue => "kAXErrorNoValue",
+        kAXErrorParameterizedAttributeUnsupported => "kAXErrorParameterizedAttributeUnsupported",
+        kAXErrorNotEnoughPrecision => "kAXErrorNotEnoughPrecision",
+        _ => "unknown error",
+    }
+}

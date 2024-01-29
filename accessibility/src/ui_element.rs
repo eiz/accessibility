@@ -14,7 +14,7 @@ use cocoa::{
 };
 use core_foundation::{
     array::CFArray,
-    base::{TCFType, TCFTypeRef},
+    base::{CFType, TCFType, TCFTypeRef},
     declare_TCFType, impl_CFTypeDescription, impl_TCFType,
     string::CFString,
 };
@@ -92,7 +92,7 @@ impl AXUIElement {
     }
 
     pub fn attribute<T: TCFType>(&self, attribute: &AXAttribute<T>) -> Result<T, Error> {
-        unsafe {
+        let res = unsafe {
             Ok(T::wrap_under_create_rule(T::Ref::from_void_ptr(
                 ax_call(|x| {
                     AXUIElementCopyAttributeValue(
@@ -103,7 +103,16 @@ impl AXUIElement {
                 })
                 .map_err(Error::Ax)?,
             )))
+        };
+        if let Ok(val) = &res {
+            if T::type_id() != CFType::type_id() && !val.instance_of::<T>() {
+                return Err(Error::UnexpectedType {
+                    expected: T::type_id(),
+                    received: val.type_of(),
+                });
+            }
         }
+        res
     }
 
     pub fn set_attribute<T: TCFType>(
