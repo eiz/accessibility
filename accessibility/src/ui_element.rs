@@ -1,4 +1,5 @@
 use std::{
+    ffi::c_uchar,
     thread,
     time::{Duration, Instant},
 };
@@ -6,8 +7,8 @@ use std::{
 use accessibility_sys::{
     pid_t, AXUIElementCopyActionNames, AXUIElementCopyAttributeNames,
     AXUIElementCopyAttributeValue, AXUIElementCreateApplication, AXUIElementCreateSystemWide,
-    AXUIElementGetTypeID, AXUIElementPerformAction, AXUIElementRef, AXUIElementSetAttributeValue,
-    AXUIElementSetMessagingTimeout,
+    AXUIElementGetTypeID, AXUIElementIsAttributeSettable, AXUIElementPerformAction, AXUIElementRef,
+    AXUIElementSetAttributeValue, AXUIElementSetMessagingTimeout,
 };
 use cocoa::{
     base::{id, nil},
@@ -124,6 +125,20 @@ impl AXUIElement {
             })
             .map_err(Error::Ax)?)
         }
+    }
+
+    pub fn is_settable<T: TCFType>(&self, attribute: &AXAttribute<T>) -> Result<bool, Error> {
+        let settable: c_uchar = unsafe {
+            ax_call(|x| {
+                AXUIElementIsAttributeSettable(
+                    self.0,
+                    attribute.as_CFString().as_concrete_TypeRef(),
+                    x,
+                )
+            })
+            .map_err(Error::Ax)?
+        };
+        Ok(settable != 0)
     }
 
     pub fn action_names(&self) -> Result<CFArray<CFString>, Error> {

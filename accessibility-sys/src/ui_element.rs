@@ -1,5 +1,5 @@
 #![allow(non_upper_case_globals, non_camel_case_types)]
-use std::ffi::c_void;
+use std::ffi::{c_uchar, c_void};
 
 use core_foundation_sys::{
     array::CFArrayRef,
@@ -60,7 +60,7 @@ extern "C" {
     pub fn AXUIElementIsAttributeSettable(
         element: AXUIElementRef,
         attribute: CFStringRef,
-        settable: *mut bool,
+        settable: *mut c_uchar,
     ) -> AXError;
     pub fn AXUIElementSetAttributeValue(
         element: AXUIElementRef,
