@@ -31,7 +31,7 @@ impl TreeVisitor for PrintyBoi {
             "{}- {} ({} children)",
             indent,
             role,
-            element.children().unwrap().len()
+            element.children().map(|c| c.len()).unwrap_or_default()
         ];
 
         if let Ok(names) = element.attribute_names() {
