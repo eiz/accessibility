@@ -5,9 +5,9 @@ use accessibility_sys::{
     kAXMainAttribute, kAXMainWindowAttribute, kAXMaxValueAttribute, kAXMinValueAttribute,
     kAXMinimizedAttribute, kAXParentAttribute, kAXPlaceholderValueAttribute, kAXRoleAttribute,
     kAXRoleDescriptionAttribute, kAXSelectedChildrenAttribute, kAXSubroleAttribute,
-    kAXTitleAttribute, kAXTopLevelUIElementAttribute, kAXValueAttribute,
-    kAXValueDescriptionAttribute, kAXValueIncrementAttribute, kAXVisibleChildrenAttribute,
-    kAXWindowAttribute, kAXWindowsAttribute,
+    kAXTitleAttribute, kAXTitleUIElementAttribute, kAXTopLevelUIElementAttribute,
+    kAXValueAttribute, kAXValueDescriptionAttribute, kAXValueIncrementAttribute,
+    kAXVisibleChildrenAttribute, kAXWindowAttribute, kAXWindowsAttribute,
 };
 use core_foundation::{
     array::CFArray,
@@ -117,6 +117,7 @@ define_attributes![
     ),
     (subrole, CFString, kAXSubroleAttribute),
     (title, CFString, kAXTitleAttribute),
+    (title_ui_element, AXUIElement, kAXTitleUIElementAttribute),
     (
         top_level_ui_element,
         AXUIElement,
