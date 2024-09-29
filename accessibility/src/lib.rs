@@ -59,11 +59,17 @@ pub enum TreeWalkerFlow {
     Exit,
 }
 
-impl TreeWalker {
-    pub fn new() -> Self {
+impl Default for TreeWalker {
+    fn default() -> Self {
         Self {
             attr_children: AXAttribute::children(),
         }
+    }
+}
+
+impl TreeWalker {
+    pub fn new() -> Self {
+        Self::default()
     }
 
     pub fn walk(&self, root: &AXUIElement, visitor: &dyn TreeVisitor) {
@@ -76,7 +82,7 @@ impl TreeWalker {
         if flow == TreeWalkerFlow::Continue {
             if let Ok(children) = root.attribute(&self.attr_children) {
                 for child in children.into_iter() {
-                    let child_flow = self.walk_one(&*child, visitor);
+                    let child_flow = self.walk_one(&child, visitor);
 
                     if child_flow == TreeWalkerFlow::Exit {
                         flow = child_flow;

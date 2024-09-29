@@ -9,8 +9,8 @@ repository = "https://github.com/eiz/accessibility"
 description = "Bindings for macOS Accessibility services"
 
 [dependencies]
-cocoa = "0.24"
-core-foundation = "0.9"
+cocoa = "0.26"
+core-foundation = "0.10"
 objc = "0.2"
 thiserror = "1"
 
