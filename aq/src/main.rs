@@ -40,7 +40,7 @@ impl TreeVisitor for PrintyBoi {
                     continue;
                 }
 
-                if let Ok(value) = element.attribute(&AXAttribute::new(&*name)) {
+                if let Ok(value) = element.attribute(&AXAttribute::new(&name)) {
                     println!["{}|. {}: {:?}", indent, *name, value];
                 }
             }

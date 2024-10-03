@@ -9,7 +9,7 @@ repository = "https://github.com/eiz/accessibility"
 description = "Accessibility query"
 
 [dependencies]
-core-foundation = "0.9"
+core-foundation = "0.10"
 structopt = "0.3"
 
 accessibility = { path = "../accessibility", version = "0.1.6" }
