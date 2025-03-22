@@ -1,6 +1,6 @@
 [package]
 name = "accessibility"
-version = "0.1.6"
+version = "0.2.0"
 authors = ["Mack Straight <mack@discordapp.com>"]
 edition = "2018"
 license = "MIT / Apache-2.0"
