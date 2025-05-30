@@ -10,7 +10,7 @@ description = "Bindings for macOS Accessibility services"
 
 [dependencies]
 cocoa = "0.26"
-core-foundation = "0.10"
+core-foundation = "0.10.1"
 objc = "0.2"
 thiserror = "1"
 
